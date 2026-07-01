@@ -69,3 +69,13 @@ End-to-End gegen die laufende Dev-Instanz getestet: Markdown-Block (Headings, Bo
 Liste, Code-Block) rendert korrekt auf der Lern-Seite, Block-Progress wechselt beim
 Aufruf automatisch auf `done`, Trainer-Editor zeigt die neue Split-View mit Live-Vorschau
 statt der alten reinen Textarea aus T017.
+
+**Nachträglich (nach Abschluss-Review durch Subagent) behoben:** `recordBlockProgressAction`
+(`src/app/(app)/courses/learn-actions.ts`) prüfte nur, dass die Einschreibung dem
+aufrufenden Nutzer gehört, nicht aber, dass die übergebene `blockId` tatsächlich zum Kurs
+der Einschreibung gehört. Da Server Actions auch per direktem POST erreichbar sind (nicht
+nur über die gerenderte UI), hätte ein Nutzer damit Fortschritt für einen beliebigen Block
+aus einem FREMDEN Kurs gegen seine eigene Einschreibung schreiben können. Behoben mit neuer
+`blockBelongsToCourse`-Prüfung in `src/lib/db/enrollments.ts`, die gegen `enrollment.courseId`
+(nicht den ungeprüft übergebenen `courseId`-Parameter) validiert. Verifiziert: Query liefert
+0 Zeilen für einen Block aus einem anderen Kurs, 1 Zeile für den richtigen Kurs.

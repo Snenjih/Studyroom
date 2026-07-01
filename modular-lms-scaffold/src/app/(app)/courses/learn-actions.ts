@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 
 import type { BlockProgressStatus } from '@/db/schema';
-import { getEnrollmentById, upsertBlockProgress } from '@/lib/db/enrollments';
+import { blockBelongsToCourse, getEnrollmentById, upsertBlockProgress } from '@/lib/db/enrollments';
 import { requireSession } from '@/lib/session';
 
 interface RecordBlockProgressInput {
@@ -25,6 +25,11 @@ export async function recordBlockProgressAction(
   const enrollment = await getEnrollmentById(enrollmentId);
   if (!enrollment || enrollment.userId !== session.userId) {
     throw new Error('Nicht berechtigt.');
+  }
+  // enrollment.courseId ist die vertrauenswürdige Quelle, nicht der übergebene
+  // courseId-Parameter (Server Actions sind auch per direktem POST aufrufbar).
+  if (!(await blockBelongsToCourse(blockId, enrollment.courseId))) {
+    throw new Error('Block gehört nicht zu diesem Kurs.');
   }
 
   await upsertBlockProgress(enrollmentId, blockId, input);

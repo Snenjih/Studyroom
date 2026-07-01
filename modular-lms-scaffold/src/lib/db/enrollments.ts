@@ -3,7 +3,7 @@ import 'server-only';
 import { and, eq } from 'drizzle-orm';
 
 import { db } from '@/db';
-import { blockProgress, type BlockProgressStatus, enrollments } from '@/db/schema';
+import { blockProgress, type BlockProgressStatus, contentBlocks, enrollments } from '@/db/schema';
 
 // Minimale Lese/Schreib-Helfer, die T018-T020 (Lern-Erlebnis pro Course-Type)
 // brauchen, um Fortschritt zu speichern. Die vollständige Enrollments-Verwaltung
@@ -27,6 +27,18 @@ export async function getEnrollmentById(enrollmentId: string) {
     .where(eq(enrollments.id, enrollmentId))
     .limit(1);
   return enrollment ?? null;
+}
+
+// Server Actions sind auch per direktem POST erreichbar (nicht nur über die UI) —
+// verhindert, dass ein Nutzer über eine eigene Einschreibung Fortschritt für einen
+// Block aus einem FREMDEN Kurs schreibt, indem er eine beliebige Block-ID mitschickt.
+export async function blockBelongsToCourse(blockId: string, courseId: string) {
+  const [block] = await db
+    .select({ id: contentBlocks.id })
+    .from(contentBlocks)
+    .where(and(eq(contentBlocks.id, blockId), eq(contentBlocks.courseId, courseId)))
+    .limit(1);
+  return Boolean(block);
 }
 
 export async function listBlockProgressForEnrollment(enrollmentId: string) {
