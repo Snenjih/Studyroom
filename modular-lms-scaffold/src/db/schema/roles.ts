@@ -2,27 +2,24 @@ import { relations } from 'drizzle-orm';
 import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 import { organizations } from './organizations';
+import { rolePermissions } from './role-permissions';
 import { userRoles } from './user-roles';
 
-export const users = pgTable('users', {
+export const roles = pgTable('roles', {
   id: uuid('id').primaryKey().defaultRandom(),
   orgId: uuid('org_id')
     .notNull()
     .references(() => organizations.id),
-  email: text('email').notNull().unique(),
   name: text('name').notNull(),
-  passwordHash: text('password_hash').notNull(),
+  description: text('description'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
-  updatedAt: timestamp('updated_at', { withTimezone: true })
-    .notNull()
-    .defaultNow()
-    .$onUpdate(() => new Date()),
 });
 
-export const usersRelations = relations(users, ({ one, many }) => ({
+export const rolesRelations = relations(roles, ({ one, many }) => ({
   organization: one(organizations, {
-    fields: [users.orgId],
+    fields: [roles.orgId],
     references: [organizations.id],
   }),
+  rolePermissions: many(rolePermissions),
   userRoles: many(userRoles),
 }));
