@@ -9,6 +9,15 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npm run build
 
+# Einmalig beim Start ausgeführt (siehe docker-compose.yml, Service db-init): wendet
+# Migrationen an und befüllt Basis-Daten. Braucht DevDependencies (drizzle-kit, tsx),
+# die im schlanken `runner`-Image unten bewusst nicht enthalten sind.
+FROM node:22-alpine AS migrator
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+CMD ["sh", "-c", "npm run db:migrate && npm run db:seed"]
+
 FROM node:22-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production

@@ -1,6 +1,6 @@
 # Projekt-Fortschritt
 
-👉 **Nächste Task:** T008 — Seed-Skript für Basis-Daten
+👉 **Nächste Task:** T009 — Drizzle-Schema für programs und courses anlegen (Phase 01 abgeschlossen)
 
 ## Phase 00 — Bootstrap
 - [x] T000 — Vollständigen Task-Breakdown generieren (`tasks/00-bootstrap/`)
@@ -13,7 +13,7 @@
 - [x] T005 — Drizzle-Schema für roles und permissions anlegen
 - [x] T006 — Auth-System einrichten (Login, Sessions)
 - [x] T007 — RBAC-Middleware und Permission-Checks implementieren
-- [ ] T008 — Seed-Skript für Basis-Daten
+- [x] T008 — Seed-Skript für Basis-Daten
 
 ## Phase 02 — Core MVP (15 Tasks)
 - [ ] T009 — Drizzle-Schema für programs und courses anlegen
