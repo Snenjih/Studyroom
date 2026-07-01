@@ -27,13 +27,14 @@ export async function listCoursesByProgram(programId: string, orgId: string) {
 
 export async function getCourseWithBlocks(id: string, orgId: string) {
   const rows = await db
-    .select({ course: courses })
+    .select({ course: courses, courseType: courseTypes })
     .from(courses)
     .innerJoin(programs, eq(courses.programId, programs.id))
+    .innerJoin(courseTypes, eq(courses.courseTypeId, courseTypes.id))
     .where(and(eq(courses.id, id), eq(programs.orgId, orgId)))
     .limit(1);
-  const course = rows[0]?.course;
-  if (!course) return null;
+  const row = rows[0];
+  if (!row) return null;
 
   const blocks = await db
     .select()
@@ -41,7 +42,11 @@ export async function getCourseWithBlocks(id: string, orgId: string) {
     .where(eq(contentBlocks.courseId, id))
     .orderBy(asc(contentBlocks.position));
 
-  return { ...course, blocks };
+  return { ...row.course, courseType: row.courseType, blocks };
+}
+
+export async function listCourseTypes() {
+  return db.select().from(courseTypes).orderBy(asc(courseTypes.name));
 }
 
 export async function courseTypeExists(courseTypeId: string) {

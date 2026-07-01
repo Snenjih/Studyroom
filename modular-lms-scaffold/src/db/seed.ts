@@ -4,6 +4,7 @@ import { PERMISSIONS } from '@/lib/permissions';
 import { hashPassword } from '@/lib/password';
 
 import { db } from './index';
+import type { CourseTypeSchemaDefinition } from './schema';
 import { courseTypes, organizations, permissions, rolePermissions, roles, userRoles, users } from './schema';
 import { BASE_ROLES } from './seed-data/base-roles';
 import { BASE_COURSE_TYPES } from './seed-data/course-types';
@@ -67,14 +68,14 @@ async function seed() {
         orgId: null,
         key: courseType.key,
         name: courseType.name,
-        schemaDefinition: courseType.schemaDefinition,
+        schemaDefinition: courseType.schemaDefinition as unknown as CourseTypeSchemaDefinition,
         executionEngine: courseType.executionEngine,
       })
       .onConflictDoUpdate({
         target: courseTypes.key,
         set: {
           name: courseType.name,
-          schemaDefinition: courseType.schemaDefinition,
+          schemaDefinition: courseType.schemaDefinition as unknown as CourseTypeSchemaDefinition,
           executionEngine: courseType.executionEngine,
         },
       });

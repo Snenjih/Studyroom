@@ -19,7 +19,9 @@ export interface FlashcardBlockContent {
 export interface QuizQuestionBlockContent {
   question: string;
   options: string[];
-  correctIndex: number;
+  // snake_case, damit der JSON-Feldname exakt mit schema_definition (T012) und der
+  // Auswertungslogik `submission_data.selected_index === correct_index` (T020) übereinstimmt.
+  correct_index: number;
 }
 
 export type BlockContent = MarkdownBlockContent | FlashcardBlockContent | QuizQuestionBlockContent;
