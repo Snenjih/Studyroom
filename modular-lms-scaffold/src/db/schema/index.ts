@@ -8,5 +8,6 @@ export * from './permissions';
 export * from './programs';
 export * from './role-permissions';
 export * from './roles';
+export * from './settings';
 export * from './user-roles';
 export * from './users';

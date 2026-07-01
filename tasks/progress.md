@@ -1,6 +1,6 @@
 # Projekt-Fortschritt
 
-👉 **Nächste Task:** T023 — Settings-Grundgerüst (zentrale Settings-Seite)
+👉 **Nächste Task:** T024 — Modul-Registry Grundstruktur (AppConfig-Pattern)
 
 ## Phase 00 — Bootstrap
 - [x] T000 — Vollständigen Task-Breakdown generieren (`tasks/00-bootstrap/`)
@@ -30,7 +30,7 @@
 - [x] T020 — Course-Type "Einfaches Quiz" — Renderer + Block-Editor
 - [x] T021 — Enrollments-API (einschreiben, austragen, Status)
 - [x] T022 — Progress-Tracking-API (Block-Status, Kursfortschritt)
-- [ ] T023 — Settings-Grundgerüst (zentrale Settings-Seite)
+- [x] T023 — Settings-Grundgerüst (zentrale Settings-Seite)
 
 ## Phase 03 — Modul-System & Type-Engine (9 Tasks)
 - [ ] T024 — Modul-Registry Grundstruktur (AppConfig-Pattern)
