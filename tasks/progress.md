@@ -1,12 +1,12 @@
 # Projekt-Fortschritt
 
-👉 **Nächste Task:** T001 — Next.js-Projekt-Grundgerüst initialisieren
+👉 **Nächste Task:** T002 — Docker-Compose-Skeleton aufsetzen
 
 ## Phase 00 — Bootstrap
 - [x] T000 — Vollständigen Task-Breakdown generieren (`tasks/00-bootstrap/`)
 
 ## Phase 01 — Fundament (8 Tasks)
-- [ ] T001 — Next.js-Projekt-Grundgerüst initialisieren
+- [x] T001 — Next.js-Projekt-Grundgerüst initialisieren
 - [ ] T002 — Docker-Compose-Skeleton aufsetzen
 - [ ] T003 — Drizzle ORM einrichten und Datenbankverbindung herstellen
 - [ ] T004 — Drizzle-Schema für organizations und users anlegen

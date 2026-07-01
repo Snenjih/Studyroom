@@ -1,7 +1,7 @@
 # T001: Next.js-Projekt-Grundgerüst initialisieren
 
 **Phase:** 01-foundation
-**Status:** offen
+**Status:** erledigt
 **Abhängig von:** keine
 
 ## Kontext
@@ -13,18 +13,18 @@ Ein lauffähiges Next.js-Projekt mit TypeScript, ESLint, Prettier und einer sinn
 Ordnerstruktur existiert. `npm run dev` startet ohne Fehler.
 
 ## Schritte
-- [ ] Next.js-Projekt mit `create-next-app` (App-Router, TypeScript, Tailwind CSS, ESLint) erstellen
-- [ ] Ordnerstruktur anlegen: `src/app/`, `src/components/`, `src/lib/`, `src/modules/`, `src/db/`
-- [ ] Prettier einrichten (`.prettierrc`, Format-Script in `package.json`)
-- [ ] Path-Aliases in `tsconfig.json` konfigurieren (`@/` → `src/`)
-- [ ] `.gitignore` prüfen/ergänzen (`.env.local`, `node_modules`, `.next`)
-- [ ] `src/app/page.tsx` als Platzhalter-Startseite (einfaches "Studyroom" Heading)
+- [x] Next.js-Projekt mit `create-next-app` (App-Router, TypeScript, Tailwind CSS, ESLint) erstellen
+- [x] Ordnerstruktur anlegen: `src/app/`, `src/components/`, `src/lib/`, `src/modules/`, `src/db/`
+- [x] Prettier einrichten (`.prettierrc`, Format-Script in `package.json`)
+- [x] Path-Aliases in `tsconfig.json` konfigurieren (`@/` → `src/`)
+- [x] `.gitignore` prüfen/ergänzen (`.env.local`, `node_modules`, `.next`)
+- [x] `src/app/page.tsx` als Platzhalter-Startseite (einfaches "Studyroom" Heading)
 
 ## Abnahmekriterien
-- [ ] `npm run dev` startet fehlerfrei auf Port 3000
-- [ ] `npm run build` erzeugt erfolgreich einen Production-Build
-- [ ] `npm run lint` gibt keine Fehler aus
-- [ ] TypeScript-Strict-Mode ist aktiv (`"strict": true` in `tsconfig.json`)
+- [x] `npm run dev` startet fehlerfrei auf Port 3000
+- [x] `npm run build` erzeugt erfolgreich einen Production-Build
+- [x] `npm run lint` gibt keine Fehler aus
+- [x] TypeScript-Strict-Mode ist aktiv (`"strict": true` in `tsconfig.json`)
 
 ## Betroffene Dateien
 - `src/` (neu, gesamte Next.js-Projektstruktur)
