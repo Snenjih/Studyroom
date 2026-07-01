@@ -50,3 +50,13 @@ verwalten. Die Einschreibung ist idempotent (doppelt einschreiben = kein Fehler)
   UNIQUE(user_id, course_id).
 - End-to-End gegen eine echte Postgres-Instanz getestet (POST/GET/DELETE, Idempotenz,
   Reaktivierung, Trainer-Roster, 403 für Fremdzugriff) — siehe Zusammenfassung im Chat.
+
+### Nachträgliche Korrektur nach Review-Subagent
+- `enrollUser()` war ursprünglich select-then-insert (nicht atomar): zwei gleichzeitige
+  erste Einschreibungsversuche (z.B. Doppelklick) hätten beide die "kein bestehender
+  Eintrag"-Prüfung bestanden und wären beide auf den UNIQUE(user_id, course_id)-
+  Constraint gelaufen — der zweite mit einem harten 500 statt des zugesagten
+  "200, kein Datenbankfehler". Behoben durch einen einzigen atomaren
+  `INSERT ... ON CONFLICT (user_id, course_id) DO UPDATE` (Drizzle
+  `onConflictDoUpdate`), der unabhängig vom vorherigen Status immer auf `active`
+  reaktiviert.

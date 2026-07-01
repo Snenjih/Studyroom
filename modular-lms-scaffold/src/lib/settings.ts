@@ -6,7 +6,7 @@ import { db } from '@/db';
 import { orgSettings } from '@/db/schema';
 
 import { getOrganization, updateOrganizationName } from './db/organizations';
-import { getOrgLogoUrl } from './storage';
+import { getOrgLogoUrl, isOwnOrgLogoKey } from './storage';
 import type { UpdateOrgSettingsInput } from './schemas/settings';
 
 export async function getSetting<T = unknown>(orgId: string, key: string): Promise<T | null> {
@@ -40,11 +40,14 @@ export interface OrgSettingsView {
 // Org-Name liegt relational in `organizations.name` (T004) — Beschreibung/Logo
 // haben keine feste Spalte und leben im generischen `org_settings`-KV-Store (T023).
 export async function getOrgSettingsView(orgId: string): Promise<OrgSettingsView> {
-  const [org, description, logoKey] = await Promise.all([
+  const [org, description, storedLogoKey] = await Promise.all([
     getOrganization(orgId),
     getSetting<string>(orgId, 'description'),
     getSetting<string>(orgId, 'logoKey'),
   ]);
+  // Defense in depth: nur eine presigned URL ausstellen, wenn der gespeicherte Key
+  // tatsächlich zur eigenen Org gehört (siehe `isOwnOrgLogoKey`).
+  const logoKey = storedLogoKey && isOwnOrgLogoKey(storedLogoKey, orgId) ? storedLogoKey : null;
   const logoUrl = logoKey ? await getOrgLogoUrl(logoKey) : null;
 
   return {
@@ -55,13 +58,20 @@ export async function getOrgSettingsView(orgId: string): Promise<OrgSettingsView
   };
 }
 
+// Nimmt bewusst NUR { name, description } entgegen — der Logo-Key wird separat über
+// `setOrgLogo()` gesetzt, ausschließlich nach einem echten Upload (siehe
+// `schemas/settings.ts` für die Begründung).
 export async function updateOrgSettings(
   orgId: string,
   input: UpdateOrgSettingsInput,
 ): Promise<void> {
   await updateOrganizationName(orgId, input.name);
   await setSetting(orgId, 'description', input.description ?? '');
-  if (input.logoKey) {
-    await setSetting(orgId, 'logoKey', input.logoKey);
+}
+
+export async function setOrgLogo(orgId: string, logoKey: string): Promise<void> {
+  if (!isOwnOrgLogoKey(logoKey, orgId)) {
+    throw new Error('Ungültiger Logo-Key.');
   }
+  await setSetting(orgId, 'logoKey', logoKey);
 }

@@ -70,3 +70,33 @@ Org-Name, Beschreibung und grundlegenden Anzeigeoptionen.
 - End-to-End gegen eine echte Postgres-Instanz getestet: GET/PUT als Admin (Speichern
   + Neuladen bestätigt persistente Werte), GET als Learner (403), Seite als Learner
   (404), Seite/API unauthentifiziert (Redirect zu /login).
+
+### Nachträgliche Korrekturen nach Review-Subagent (zwei echte Sicherheitslücken)
+- `uploadOrgLogo()` baute den Object-Key aus dem rohen, Client-kontrollierten
+  `file.name` zusammen (`org-logos/<orgId>-<timestamp>-<file.name>`) — ein Dateiname
+  wie `../../x` hätte den Key aus dem `org-logos/`-Präfix heraus manipulieren können
+  (Path Traversal im Object Store). Behoben: Der Key wird jetzt aus `orgId` +
+  `crypto.randomUUID()` + einer sicher extrahierten Dateiendung gebaut, der
+  Original-Dateiname fließt nicht mehr ein. Zusätzlich serverseitige Validierung von
+  Content-Type (muss `image/*` sein) und Größe (max. 5 MB) ergänzt — vorher nur
+  Client-seitig über `accept="image/*"`, was keine echte Schranke ist.
+- `PUT /api/settings` akzeptierte `logoKey` als beliebigen String im JSON-Body und
+  speicherte ihn ungeprüft. Da `getOrgLogoUrl()` für jeden gespeicherten Key eine
+  presigned GET-URL für den (geteilten) Bucket ausstellt, hätte ein Admin darüber
+  Lesezugriff auf FREMDE Objekte im Bucket erschleichen können (z.B. den Logo-Key
+  einer anderen Org erraten/kopieren). Behoben: `logoKey` ist kein Teil des
+  öffentlichen `updateOrgSettingsSchema` mehr (nur noch `name`/`description`) und kann
+  ausschließlich über die neue Funktion `setOrgLogo()` gesetzt werden, die serverseitig
+  prüft, dass der Key wirklich zur eigenen Org gehört (`isOwnOrgLogoKey`, Präfix
+  `org-logos/<orgId>-`). `settings/actions.ts` ruft nach einem echten Upload jetzt
+  `setOrgLogo()` separat auf statt `logoKey` durch `updateOrgSettings()` zu schleusen.
+  `getOrgSettingsView()` validiert den gespeicherten Key beim Lesen zusätzlich
+  (Defense in Depth), bevor eine presigned URL ausgestellt wird.
+- `learn-actions.ts`/`learn/page.tsx` (bereits bestehender Code aus T018-T020) riefen
+  weiterhin `upsertBlockProgress()` direkt statt des in T022 eingeführten
+  `setBlockProgress()` — dadurch lief der Course-Completion-Check nie über den
+  echten Lern-Flow. Für Details siehe Notizen in T022.
+- `dashboard.ts` (T015) zeigte Kurse nach dem Austragen (T021) unbegrenzt weiter an,
+  weil die Enrollment-Query keinen Status-Filter hatte. Für Details siehe Notizen
+  in T022 (dort behoben, da `ACCESSIBLE_ENROLLMENT_STATUSES` aus `progress.ts`
+  stammt und dort exportiert wurde).

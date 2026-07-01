@@ -5,6 +5,8 @@ import { and, count, eq, inArray } from 'drizzle-orm';
 import { db } from '@/db';
 import { blockProgress, contentBlocks, courses, enrollments, programs } from '@/db/schema';
 
+import { ACCESSIBLE_ENROLLMENT_STATUSES } from './progress';
+
 export interface EnrolledCourseSummary {
   enrollmentId: string;
   courseId: string;
@@ -26,7 +28,12 @@ export async function getEnrolledCourses(userId: string): Promise<EnrolledCourse
     .from(enrollments)
     .innerJoin(courses, eq(enrollments.courseId, courses.id))
     .innerJoin(programs, eq(courses.programId, programs.id))
-    .where(eq(enrollments.userId, userId));
+    .where(
+      and(
+        eq(enrollments.userId, userId),
+        inArray(enrollments.status, ACCESSIBLE_ENROLLMENT_STATUSES),
+      ),
+    );
 
   if (enrollmentRows.length === 0) return [];
 

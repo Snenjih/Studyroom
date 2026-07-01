@@ -39,7 +39,10 @@ export async function getCourseProgress(courseId: string, enrollmentId: string):
 }
 
 // Vollständig abgeschlossen ist ein Kurs erst, wenn ALLE Blöcke `done` sind (nicht
-// `failed`) — setzt dann `enrollments.completed_at` und Status `completed`.
+// `failed`) — setzt dann `enrollments.completed_at` und Status `completed`. Fällt ein
+// zuvor abgeschlossener Kurs unter 100% zurück (z.B. ein Block wird erneut bearbeitet
+// und schlägt fehl, oder ein Trainer ergänzt nachträglich einen neuen Block), wird der
+// Completion-Status wieder zurückgenommen statt veraltet stehen zu bleiben.
 async function checkCourseCompletion(enrollmentId: string, courseId: string) {
   const [totalRow] = await db
     .select({ total: count() })
@@ -53,12 +56,25 @@ async function checkCourseCompletion(enrollmentId: string, courseId: string) {
     .from(blockProgress)
     .where(and(eq(blockProgress.enrollmentId, enrollmentId), eq(blockProgress.status, 'done')));
   const done = doneRow?.done ?? 0;
-  if (done < total) return;
 
-  await db
-    .update(enrollments)
-    .set({ status: 'completed', completedAt: new Date() })
-    .where(eq(enrollments.id, enrollmentId));
+  const [enrollment] = await db
+    .select({ status: enrollments.status })
+    .from(enrollments)
+    .where(eq(enrollments.id, enrollmentId))
+    .limit(1);
+  if (!enrollment) return;
+
+  if (done >= total && enrollment.status !== 'completed') {
+    await db
+      .update(enrollments)
+      .set({ status: 'completed', completedAt: new Date() })
+      .where(eq(enrollments.id, enrollmentId));
+  } else if (done < total && enrollment.status === 'completed') {
+    await db
+      .update(enrollments)
+      .set({ status: 'active', completedAt: null })
+      .where(eq(enrollments.id, enrollmentId));
+  }
 }
 
 export async function setBlockProgress(
@@ -79,7 +95,7 @@ export type EnrollmentAccessError = 'course_not_found' | 'not_enrolled';
 // könnte ein Lernender den eigenen Fortschritt nicht mehr einsehen, sobald der Kurs
 // fertig ist. Nur explizit ausgetragene (`inactive`/`dropped`) Einschreibungen sind
 // gesperrt (T021/T022-Abnahme: "Kein Progress ohne aktive Einschreibung").
-const ACCESSIBLE_ENROLLMENT_STATUSES = ['active', 'completed'] as const;
+export const ACCESSIBLE_ENROLLMENT_STATUSES = ['active', 'completed'] as const;
 
 export async function getActiveEnrollmentForCourse(
   userId: string,

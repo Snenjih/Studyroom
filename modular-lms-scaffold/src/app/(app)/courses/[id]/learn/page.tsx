@@ -3,11 +3,8 @@ import { notFound } from 'next/navigation';
 
 import { recordBlockProgressAction } from '@/app/(app)/courses/learn-actions';
 import { getCourseWithBlocks } from '@/lib/db/courses';
-import {
-  getOrCreateEnrollment,
-  listBlockProgressForEnrollment,
-  upsertBlockProgress,
-} from '@/lib/db/enrollments';
+import { getOrCreateEnrollment, listBlockProgressForEnrollment } from '@/lib/db/enrollments';
+import { setBlockProgress } from '@/lib/db/progress';
 import { courseTypeRegistry } from '@/lib/course-type-registry';
 import { requireSession } from '@/lib/session';
 
@@ -28,7 +25,7 @@ export default async function LearnCoursePage({ params }: PageProps) {
   // aufgerufen wurden — keine Nutzer-Interaktion nötig (Konzept Abschnitt 3/10, T018).
   if (course.courseType.executionEngine === 'static') {
     for (const block of course.blocks) {
-      await upsertBlockProgress(enrollment.id, block.id, { status: 'done' });
+      await setBlockProgress(enrollment.id, block.id, courseId, { status: 'done' });
     }
   }
 

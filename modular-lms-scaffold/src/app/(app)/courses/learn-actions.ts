@@ -3,7 +3,8 @@
 import { revalidatePath } from 'next/cache';
 
 import type { BlockProgressStatus } from '@/db/schema';
-import { blockBelongsToCourse, getEnrollmentById, upsertBlockProgress } from '@/lib/db/enrollments';
+import { blockBelongsToCourse, getEnrollmentById } from '@/lib/db/enrollments';
+import { setBlockProgress } from '@/lib/db/progress';
 import { requireSession } from '@/lib/session';
 
 interface RecordBlockProgressInput {
@@ -14,7 +15,9 @@ interface RecordBlockProgressInput {
 
 // Für Lernende, die ihren EIGENEN Fortschritt eintragen (Flip einer Flashcard,
 // Quiz-Antwort) — kein `courses:manage` nötig, nur Eigentümerschaft der Einschreibung.
-// Die vollständige Progress-Tracking-API folgt in T022, baut auf demselben DAL auf.
+// Nutzt `setBlockProgress` (T022) statt des rohen `upsertBlockProgress`, damit der
+// Completion-Check (`enrollments.completed_at`) auch über den echten Lern-Flow
+// ausgelöst wird, nicht nur über die REST-API.
 export async function recordBlockProgressAction(
   courseId: string,
   enrollmentId: string,
@@ -32,6 +35,6 @@ export async function recordBlockProgressAction(
     throw new Error('Block gehört nicht zu diesem Kurs.');
   }
 
-  await upsertBlockProgress(enrollmentId, blockId, input);
+  await setBlockProgress(enrollmentId, blockId, enrollment.courseId, input);
   revalidatePath(`/courses/${courseId}/learn`);
 }

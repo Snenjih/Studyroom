@@ -59,3 +59,21 @@ und im Dashboard (T015) angezeigt.
   gute Folge-Aufräumarbeit (nicht Teil dieser Task).
 - End-to-End gegen eine echte Postgres-Instanz getestet (Enroll → 0% → 50% → 100%
   → completed_at gesetzt → 403 nach Austragen), siehe Zusammenfassung im Chat.
+
+### Nachträgliche Korrekturen nach Review-Subagent
+- `checkCourseCompletion()` war nur einseitig (setzte `completed`, konnte es nie
+  wieder zurücknehmen). Fällt der Fortschritt unter 100% zurück (Block erneut
+  bearbeitet, oder nachträglich neuer Block ergänzt), wird der Status jetzt wieder
+  auf `active` gesetzt und `completedAt` geleert.
+- Echter Bug gefunden: Der Lern-Flow (`learn-actions.ts` → `recordBlockProgressAction`,
+  und die Auto-Complete-Schleife für `static`-Course-Types in `learn/page.tsx`) rief
+  weiterhin das rohe `upsertBlockProgress()` aus `enrollments.ts` auf statt des neuen
+  `setBlockProgress()` aus `progress.ts` — der Completion-Check lief dadurch NIE über
+  den echten Produkt-Pfad, nur über die neue REST-API. Behoben: beide Stellen nutzen
+  jetzt `setBlockProgress()`.
+- `dashboard.ts` bekam zusätzlich einen Status-Filter (`ACCESSIBLE_ENROLLMENT_STATUSES`,
+  jetzt aus `progress.ts` exportiert und dort wiederverwendet) — vorher zeigte "Meine
+  Kurse" eine Einschreibung nach dem Austragen (T021, `status: 'inactive'`) für immer
+  weiter an, weil die Query gar keinen Status-Filter hatte. Das war vor T021 harmlos
+  (kein Code-Pfad erzeugte je einen anderen Status), wurde aber durch T021s neuen
+  Unenroll-Pfad zu einer echten Regression.

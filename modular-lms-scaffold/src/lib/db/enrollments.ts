@@ -58,31 +58,25 @@ export async function getEnrollment(enrollmentId: string, orgId: string) {
 }
 
 // Idempotent (T021-Abnahmekriterium): mehrfaches Einschreiben legt kein Duplikat an
-// und liefert keinen Fehler. Eine zuvor ausgetragene (inactive/dropped) Einschreibung
-// wird reaktiviert statt eine zweite Zeile anzulegen (UNIQUE(user_id, course_id)).
+// und liefert keinen Fehler. Ein single-statement UPSERT (statt select-then-insert)
+// ist atomar und übersteht auch zwei gleichzeitige erste Einschreibungsversuche
+// (z.B. Doppelklick) ohne auf den UNIQUE(user_id, course_id)-Constraint zu laufen.
+// Eine zuvor ausgetragene (inactive/dropped) Einschreibung wird reaktiviert statt
+// eine zweite Zeile anzulegen.
 export async function enrollUser(userId: string, courseId: string, orgId: string) {
   if (!(await courseBelongsToOrg(courseId, orgId))) {
     return { error: 'course_not_found' as const };
   }
 
-  const [existing] = await db
-    .select()
-    .from(enrollments)
-    .where(and(eq(enrollments.userId, userId), eq(enrollments.courseId, courseId)))
-    .limit(1);
-
-  if (existing) {
-    if (existing.status === 'active') return { enrollment: existing };
-    const [reactivated] = await db
-      .update(enrollments)
-      .set({ status: 'active', completedAt: null })
-      .where(eq(enrollments.id, existing.id))
-      .returning();
-    return { enrollment: reactivated };
-  }
-
-  const [created] = await db.insert(enrollments).values({ userId, courseId }).returning();
-  return { enrollment: created };
+  const [enrollment] = await db
+    .insert(enrollments)
+    .values({ userId, courseId, status: 'active' })
+    .onConflictDoUpdate({
+      target: [enrollments.userId, enrollments.courseId],
+      set: { status: 'active', completedAt: null },
+    })
+    .returning();
+  return { enrollment };
 }
 
 // Setzt Status auf `inactive` statt den Eintrag zu löschen — Verlauf (Fortschritt,
