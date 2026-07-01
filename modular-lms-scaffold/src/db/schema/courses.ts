@@ -1,6 +1,7 @@
 import { relations } from 'drizzle-orm';
 import { jsonb, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
+import { contentBlocks } from './content-blocks';
 import { courseTypes } from './course-types';
 import { programs } from './programs';
 
@@ -23,7 +24,7 @@ export const courses = pgTable('courses', {
     .$onUpdate(() => new Date()),
 });
 
-export const coursesRelations = relations(courses, ({ one }) => ({
+export const coursesRelations = relations(courses, ({ one, many }) => ({
   program: one(programs, {
     fields: [courses.programId],
     references: [programs.id],
@@ -32,4 +33,6 @@ export const coursesRelations = relations(courses, ({ one }) => ({
     fields: [courses.courseTypeId],
     references: [courseTypes.id],
   }),
+  // Sortierung nach `position` erfolgt beim Query (Konzept Abschnitt 4), nicht hier.
+  contentBlocks: many(contentBlocks),
 }));

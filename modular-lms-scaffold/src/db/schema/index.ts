@@ -1,3 +1,4 @@
+export * from './content-blocks';
 export * from './course-types';
 export * from './courses';
 export * from './organizations';
