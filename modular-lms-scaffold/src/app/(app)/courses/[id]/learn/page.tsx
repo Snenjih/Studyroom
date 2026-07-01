@@ -3,7 +3,11 @@ import { notFound } from 'next/navigation';
 
 import { recordBlockProgressAction } from '@/app/(app)/courses/learn-actions';
 import { getCourseWithBlocks } from '@/lib/db/courses';
-import { getOrCreateEnrollment, listBlockProgressForEnrollment, upsertBlockProgress } from '@/lib/db/enrollments';
+import {
+  getOrCreateEnrollment,
+  listBlockProgressForEnrollment,
+  upsertBlockProgress,
+} from '@/lib/db/enrollments';
 import { courseTypeRegistry } from '@/lib/course-type-registry';
 import { requireSession } from '@/lib/session';
 
@@ -55,10 +59,18 @@ export default async function LearnCoursePage({ params }: PageProps) {
         {course.blocks.map((block) => {
           const Renderer = registryEntry?.renderer;
           const progress = progressByBlock.get(block.id);
-          const onComplete = recordBlockProgressAction.bind(null, courseId, enrollment.id, block.id);
+          const onComplete = recordBlockProgressAction.bind(
+            null,
+            courseId,
+            enrollment.id,
+            block.id,
+          );
 
           return (
-            <section key={block.id} className="border-t border-zinc-800/70 pt-8 first:border-t-0 first:pt-0">
+            <section
+              key={block.id}
+              className="border-t border-zinc-800/70 pt-8 first:border-t-0 first:pt-0"
+            >
               {Renderer ? (
                 <Renderer
                   content={block.content as unknown as Record<string, unknown>}

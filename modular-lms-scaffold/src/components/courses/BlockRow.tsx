@@ -2,7 +2,11 @@
 
 import { useState, useTransition } from 'react';
 
-import { deleteBlockAction, moveBlockAction, updateBlockContentAction } from '@/app/(app)/courses/actions';
+import {
+  deleteBlockAction,
+  moveBlockAction,
+  updateBlockContentAction,
+} from '@/app/(app)/courses/actions';
 import { ConfirmButton } from '@/components/ui/ConfirmButton';
 import type {
   FlashcardBlockContent,
@@ -98,7 +102,9 @@ export function BlockRow({
         >
           {isPending ? 'Speichert…' : 'Speichern'}
         </button>
-        {saved && !isPending && <span className="font-mono text-[11px] text-cyan-400">gespeichert</span>}
+        {saved && !isPending && (
+          <span className="font-mono text-[11px] text-cyan-400">gespeichert</span>
+        )}
       </div>
     </li>
   );
@@ -188,7 +194,9 @@ function BlockContentFields({ blockType, draft, onChange }: BlockContentFieldsPr
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <label className="font-mono text-[11px] text-zinc-500">Optionen (richtige markieren)</label>
+          <label className="font-mono text-[11px] text-zinc-500">
+            Optionen (richtige markieren)
+          </label>
           {options.map((option, index) => (
             <div key={index} className="flex items-center gap-2">
               <input
@@ -213,7 +221,11 @@ function BlockContentFields({ blockType, draft, onChange }: BlockContentFieldsPr
                 onClick={() => {
                   const nextOptions = options.filter((_, i) => i !== index);
                   const nextCorrect =
-                    value.correct_index === index ? 0 : value.correct_index > index ? value.correct_index - 1 : value.correct_index;
+                    value.correct_index === index
+                      ? 0
+                      : value.correct_index > index
+                        ? value.correct_index - 1
+                        : value.correct_index;
                   onChange({ ...draft, options: nextOptions, correct_index: nextCorrect });
                 }}
                 className="font-mono text-[11px] text-zinc-600 hover:text-red-400"

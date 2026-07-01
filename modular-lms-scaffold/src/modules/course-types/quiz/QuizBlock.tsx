@@ -23,7 +23,11 @@ function getPreviousSelection(submissionData: unknown): number | null {
 }
 
 export function QuizBlock({ content, progress, onComplete }: BlockRendererProps) {
-  const { question, options, correct_index: correctIndex } = content as unknown as QuizQuestionContent;
+  const {
+    question,
+    options,
+    correct_index: correctIndex,
+  } = content as unknown as QuizQuestionContent;
   const previousSelection = getPreviousSelection(progress?.submissionData);
 
   const [selected, setSelected] = useState<number | null>(previousSelection);

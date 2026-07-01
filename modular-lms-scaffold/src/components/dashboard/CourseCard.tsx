@@ -19,7 +19,10 @@ export function CourseCard({ courseId, title, programTitle, progressPercent }: C
       <p className="font-mono text-[11px] uppercase tracking-wider text-zinc-500">{programTitle}</p>
       <h3 className="mt-1 text-lg font-semibold text-zinc-100">{title}</h3>
       <div className="mt-4">
-        <ProgressBar percent={progressPercent} label={progressPercent >= 100 ? 'Abgeschlossen' : 'Fortschritt'} />
+        <ProgressBar
+          percent={progressPercent}
+          label={progressPercent >= 100 ? 'Abgeschlossen' : 'Fortschritt'}
+        />
       </div>
     </Link>
   );

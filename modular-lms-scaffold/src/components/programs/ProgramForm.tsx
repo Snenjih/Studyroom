@@ -16,7 +16,10 @@ export function ProgramForm({ action, defaultValues, submitLabel }: ProgramFormP
   return (
     <form action={formAction} className="flex max-w-lg flex-col gap-5">
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="title" className="font-mono text-[11px] uppercase tracking-wider text-zinc-500">
+        <label
+          htmlFor="title"
+          className="font-mono text-[11px] uppercase tracking-wider text-zinc-500"
+        >
           Titel
         </label>
         <input

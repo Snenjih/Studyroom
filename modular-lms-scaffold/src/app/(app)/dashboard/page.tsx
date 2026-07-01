@@ -25,10 +25,10 @@ export default async function DashboardPage() {
 
       <section>
         <div className="mb-4 flex items-baseline justify-between">
-          <h2 className="font-mono text-sm uppercase tracking-wider text-zinc-400">
-            Meine Kurse
-          </h2>
-          <span className="font-mono text-[11px] text-zinc-600">{enrolledCourses.length} eingeschrieben</span>
+          <h2 className="font-mono text-sm uppercase tracking-wider text-zinc-400">Meine Kurse</h2>
+          <span className="font-mono text-[11px] text-zinc-600">
+            {enrolledCourses.length} eingeschrieben
+          </span>
         </div>
 
         {enrolledCourses.length === 0 ? (

@@ -43,7 +43,9 @@ export async function getEnrolledCourses(userId: string): Promise<EnrolledCourse
   const doneBlockRows = await db
     .select({ enrollmentId: blockProgress.enrollmentId, done: count() })
     .from(blockProgress)
-    .where(and(inArray(blockProgress.enrollmentId, enrollmentIds), eq(blockProgress.status, 'done')))
+    .where(
+      and(inArray(blockProgress.enrollmentId, enrollmentIds), eq(blockProgress.status, 'done')),
+    )
     .groupBy(blockProgress.enrollmentId);
   const doneBlocksByEnrollment = new Map(doneBlockRows.map((row) => [row.enrollmentId, row.done]));
 

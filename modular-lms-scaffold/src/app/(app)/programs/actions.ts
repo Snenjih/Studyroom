@@ -9,8 +9,7 @@ import { requirePermission } from '@/lib/rbac';
 import { createProgramSchema, updateProgramSchema } from '@/lib/schemas/program';
 
 export type ProgramFormState =
-  | { error?: string; fieldErrors?: Record<string, string[] | undefined> }
-  | undefined;
+  { error?: string; fieldErrors?: Record<string, string[] | undefined> } | undefined;
 
 export async function createProgramAction(
   _prevState: ProgramFormState,

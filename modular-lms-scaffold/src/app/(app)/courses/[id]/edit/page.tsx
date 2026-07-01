@@ -49,9 +49,7 @@ export default async function EditCoursePage({ params }: PageProps) {
       </header>
 
       <section>
-        <h2 className="mb-4 font-mono text-sm uppercase tracking-wider text-zinc-400">
-          Kursdaten
-        </h2>
+        <h2 className="mb-4 font-mono text-sm uppercase tracking-wider text-zinc-400">Kursdaten</h2>
         <CourseForm
           action={boundUpdateAction}
           submitLabel="Änderungen speichern"
@@ -65,7 +63,11 @@ export default async function EditCoursePage({ params }: PageProps) {
           Content-Blöcke
         </h2>
         <div className="flex flex-col gap-4">
-          <BlockList courseId={courseId} courseTypeKey={course.courseType.key} blocks={course.blocks} />
+          <BlockList
+            courseId={courseId}
+            courseTypeKey={course.courseType.key}
+            blocks={course.blocks}
+          />
           <AddBlockButton
             courseId={courseId}
             allowedBlockTypes={course.courseType.schemaDefinition.allowedBlockTypes}

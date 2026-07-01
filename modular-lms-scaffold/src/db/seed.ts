@@ -5,7 +5,15 @@ import { hashPassword } from '@/lib/password';
 
 import { db } from './index';
 import type { CourseTypeSchemaDefinition } from './schema';
-import { courseTypes, organizations, permissions, rolePermissions, roles, userRoles, users } from './schema';
+import {
+  courseTypes,
+  organizations,
+  permissions,
+  rolePermissions,
+  roles,
+  userRoles,
+  users,
+} from './schema';
 import { BASE_ROLES } from './seed-data/base-roles';
 import { BASE_COURSE_TYPES } from './seed-data/course-types';
 

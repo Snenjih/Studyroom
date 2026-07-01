@@ -18,8 +18,7 @@ import { requirePermission } from '@/lib/rbac';
 import { createBlockSchema, createCourseSchema, updateCourseSchema } from '@/lib/schemas/course';
 
 export type CourseFormState =
-  | { error?: string; fieldErrors?: Record<string, string[] | undefined> }
-  | undefined;
+  { error?: string; fieldErrors?: Record<string, string[] | undefined> } | undefined;
 
 export async function createCourseAction(
   programId: string,

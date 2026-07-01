@@ -37,7 +37,10 @@ export function CourseForm({
   return (
     <form action={formAction} className="flex max-w-2xl flex-col gap-6">
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="title" className="font-mono text-[11px] uppercase tracking-wider text-zinc-500">
+        <label
+          htmlFor="title"
+          className="font-mono text-[11px] uppercase tracking-wider text-zinc-500"
+        >
           Titel
         </label>
         <input
@@ -73,7 +76,9 @@ export function CourseForm({
 
       {currentCourseType && (
         <div className="flex flex-col gap-1.5">
-          <p className="font-mono text-[11px] uppercase tracking-wider text-zinc-500">Course-Type</p>
+          <p className="font-mono text-[11px] uppercase tracking-wider text-zinc-500">
+            Course-Type
+          </p>
           <div className="flex w-fit items-center gap-2 rounded border border-zinc-800 bg-zinc-900/60 px-3 py-2">
             <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
             <span className="text-zinc-200">{currentCourseType.name}</span>
@@ -86,7 +91,9 @@ export function CourseForm({
 
       {courseTypeOptions && (
         <div className="flex flex-col gap-1.5">
-          <p className="font-mono text-[11px] uppercase tracking-wider text-zinc-500">Course-Type</p>
+          <p className="font-mono text-[11px] uppercase tracking-wider text-zinc-500">
+            Course-Type
+          </p>
           <input type="hidden" name="courseTypeId" value={selectedTypeId ?? ''} />
           <div className="grid gap-3 sm:grid-cols-3">
             {courseTypeOptions.map((option) => {

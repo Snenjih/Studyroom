@@ -71,7 +71,9 @@ export async function createCourse(
   programId: string,
   orgId: string,
   input: CreateCourseInput,
-): Promise<{ error: 'program_not_found' | 'course_type_not_found' } | { course: typeof courses.$inferSelect }> {
+): Promise<
+  { error: 'program_not_found' | 'course_type_not_found' } | { course: typeof courses.$inferSelect }
+> {
   if (!(await programBelongsToOrg(programId, orgId))) {
     return { error: 'program_not_found' };
   }

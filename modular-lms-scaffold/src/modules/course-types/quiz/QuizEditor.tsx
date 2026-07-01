@@ -15,7 +15,9 @@ export function QuizEditor({ content, onChange }: QuizEditorProps) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
-        <label className="font-mono text-[11px] uppercase tracking-wider text-zinc-500">Frage</label>
+        <label className="font-mono text-[11px] uppercase tracking-wider text-zinc-500">
+          Frage
+        </label>
         <input
           value={question}
           onChange={(event) => onChange({ ...content, question: event.target.value })}
@@ -51,7 +53,11 @@ export function QuizEditor({ content, onChange }: QuizEditorProps) {
               onClick={() => {
                 const nextOptions = options.filter((_, i) => i !== index);
                 const nextCorrect =
-                  correctIndex === index ? 0 : correctIndex > index ? correctIndex - 1 : correctIndex;
+                  correctIndex === index
+                    ? 0
+                    : correctIndex > index
+                      ? correctIndex - 1
+                      : correctIndex;
                 onChange({ ...content, options: nextOptions, correct_index: nextCorrect });
               }}
               className="font-mono text-[11px] text-zinc-600 hover:text-red-400"

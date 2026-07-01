@@ -21,9 +21,7 @@ export const userRoles = pgTable(
     scopeId: uuid('scope_id'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
-  (table) => [
-    unique().on(table.userId, table.roleId, table.scopeType, table.scopeId),
-  ],
+  (table) => [unique().on(table.userId, table.roleId, table.scopeType, table.scopeId)],
 );
 
 export const userRolesRelations = relations(userRoles, ({ one }) => ({
