@@ -11,7 +11,12 @@ export const BASE_ROLES = [
   {
     name: 'trainer',
     description: 'Erstellt und verwaltet Programme, Kurse und Inhalte',
-    permissions: [PERMISSIONS.COURSES_CREATE, PERMISSIONS.COURSES_EDIT_OWN],
+    permissions: [
+      PERMISSIONS.PROGRAMS_MANAGE,
+      PERMISSIONS.COURSES_CREATE,
+      PERMISSIONS.COURSES_MANAGE,
+      PERMISSIONS.COURSES_EDIT_OWN,
+    ],
   },
   {
     name: 'learner',

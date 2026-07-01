@@ -1,6 +1,6 @@
 # Projekt-Fortschritt
 
-👉 **Nächste Task:** T013 — Programs-CRUD-API (Route Handlers)
+👉 **Nächste Task:** T014 — Courses-CRUD-API (Route Handlers)
 
 ## Phase 00 — Bootstrap
 - [x] T000 — Vollständigen Task-Breakdown generieren (`tasks/00-bootstrap/`)
@@ -20,7 +20,7 @@
 - [x] T010 — Drizzle-Schema für content_blocks anlegen
 - [x] T011 — Drizzle-Schema für enrollments und block_progress anlegen
 - [x] T012 — Hartcodierte Course-Types als Seed-Daten anlegen
-- [ ] T013 — Programs-CRUD-API (Route Handlers)
+- [x] T013 — Programs-CRUD-API (Route Handlers)
 - [ ] T014 — Courses-CRUD-API (Route Handlers)
 - [ ] T015 — Dashboard-Seite (Übersicht eigener/zugewiesener Kurse)
 - [ ] T016 — Programs-Verwaltungsseite (Liste + Create/Edit/Delete UI)
