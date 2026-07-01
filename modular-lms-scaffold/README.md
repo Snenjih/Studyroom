@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Studyroom
+
+Self-hosted, modular learning platform built with Next.js, Postgres, Redis and MinIO.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- [Docker](https://docs.docker.com/get-docker/) and Docker Compose v2
+
+### Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# 1. Copy environment file
+cp .env.example .env.local
+
+# 2. Start all services
+docker compose up
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app is available at **http://localhost:3000**.  
+MinIO web UI (file storage) is at **http://localhost:9001**.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Development (hot-reload)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+```
 
-## Learn More
+This mounts the source directory into the container and runs `npm run dev` with hot-reload. Postgres and Redis ports are also exposed locally (5432 / 6379) for use with database clients.
 
-To learn more about Next.js, take a look at the following resources:
+### Stop & clean up
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+# Stop containers, keep volumes
+docker compose down
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Stop and delete all data volumes
+docker compose down -v
+```
 
-## Deploy on Vercel
+## Stack
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Service  | Image               | Purpose                       |
+|----------|---------------------|-------------------------------|
+| app      | (local build)       | Next.js application           |
+| postgres | postgres:16-alpine  | Primary database              |
+| redis    | redis:7-alpine      | Sessions / cache / job queue  |
+| minio    | minio/minio:latest  | S3-compatible file storage    |

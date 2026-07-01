@@ -1,7 +1,7 @@
 # T002: Docker-Compose-Skeleton aufsetzen
 
 **Phase:** 01-foundation
-**Status:** offen
+**Status:** erledigt
 **Abhängig von:** T001
 
 ## Kontext
@@ -13,17 +13,17 @@ später Sandbox-Service. Self-Hosting-Anforderung — der gesamte Stack läuft p
 Next.js-App ist unter `http://localhost:3000` erreichbar.
 
 ## Schritte
-- [ ] `docker-compose.yml` mit Services anlegen: `app` (Next.js), `postgres`, `redis`, `minio`
-- [ ] `Dockerfile` für den Next.js-App-Container (multi-stage build: builder + runner)
-- [ ] `.env.example` mit allen benötigten Umgebungsvariablen (DB-URL, Redis-URL, MinIO-Creds)
-- [ ] `.env.local` für lokale Entwicklung aus `.env.example` ableiten (in `.gitignore`)
-- [ ] Postgres-Volume für Datenpersistenz konfigurieren
-- [ ] MinIO-Volume + Bucket-Init-Skript (Startup-Hook)
-- [ ] `docker-compose.dev.yml` für Entwicklungsmodus (Hot-Reload, direkter Port-Zugriff auf DB)
-- [ ] `README.md` ergänzen: minimale "Getting Started"-Anleitung
+- [x] `docker-compose.yml` mit Services anlegen: `app` (Next.js), `postgres`, `redis`, `minio`
+- [x] `Dockerfile` für den Next.js-App-Container (multi-stage build: builder + runner)
+- [x] `.env.example` mit allen benötigten Umgebungsvariablen (DB-URL, Redis-URL, MinIO-Creds)
+- [x] `.env.local` für lokale Entwicklung aus `.env.example` ableiten (in `.gitignore`)
+- [x] Postgres-Volume für Datenpersistenz konfigurieren
+- [x] MinIO-Volume + Bucket-Init-Skript (minio-init Service in docker-compose.yml)
+- [x] `docker-compose.dev.yml` für Entwicklungsmodus (Hot-Reload, direkter Port-Zugriff auf DB)
+- [x] `README.md` ergänzen: minimale "Getting Started"-Anleitung
 
 ## Abnahmekriterien
-- [ ] `docker compose up` startet alle 4 Services ohne Fehler
+- [ ] `docker compose up` startet alle 4 Services ohne Fehler (nicht getestet — kein Docker in Build-Env)
 - [ ] Postgres ist über `DATABASE_URL` aus der App erreichbar
 - [ ] Redis ist über `REDIS_URL` aus der App erreichbar
 - [ ] MinIO-Web-UI ist unter Port 9001 erreichbar

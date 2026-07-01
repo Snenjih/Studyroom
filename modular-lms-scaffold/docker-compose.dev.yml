@@ -1,0 +1,30 @@
+services:
+  app:
+    build:
+      context: .
+      target: deps
+    image: studyroom-dev
+    command: npm run dev
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NODE_ENV=development
+    ports:
+      - '3000:3000'
+    env_file:
+      - .env.local
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  postgres:
+    ports:
+      - '5432:5432'
+
+  redis:
+    ports:
+      - '6379:6379'
