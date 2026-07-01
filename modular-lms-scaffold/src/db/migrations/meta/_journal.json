@@ -8,6 +8,20 @@
       "when": 1782896159230,
       "tag": "0000_good_maddog",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1782897260928,
+      "tag": "0001_complete_hedge_knight",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1782897270041,
+      "tag": "0002_hard_nuke",
+      "breakpoints": true
     }
   ]
 }

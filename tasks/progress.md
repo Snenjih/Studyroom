@@ -1,6 +1,6 @@
 # Projekt-Fortschritt
 
-👉 **Nächste Task:** T004 — Drizzle-Schema für organizations und users anlegen
+👉 **Nächste Task:** T005 — Drizzle-Schema für roles und permissions anlegen
 
 ## Phase 00 — Bootstrap
 - [x] T000 — Vollständigen Task-Breakdown generieren (`tasks/00-bootstrap/`)
@@ -9,7 +9,7 @@
 - [x] T001 — Next.js-Projekt-Grundgerüst initialisieren
 - [x] T002 — Docker-Compose-Skeleton aufsetzen
 - [x] T003 — Drizzle ORM einrichten und Datenbankverbindung herstellen
-- [ ] T004 — Drizzle-Schema für organizations und users anlegen
+- [x] T004 — Drizzle-Schema für organizations und users anlegen
 - [ ] T005 — Drizzle-Schema für roles und permissions anlegen
 - [ ] T006 — Auth-System einrichten (Login, Sessions)
 - [ ] T007 — RBAC-Middleware und Permission-Checks implementieren
