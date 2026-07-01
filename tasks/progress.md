@@ -1,6 +1,6 @@
 # Projekt-Fortschritt
 
-👉 **Nächste Task:** T006 — Auth-System einrichten (Login, Sessions)
+👉 **Nächste Task:** T007 — RBAC-Middleware und Permission-Checks implementieren
 
 ## Phase 00 — Bootstrap
 - [x] T000 — Vollständigen Task-Breakdown generieren (`tasks/00-bootstrap/`)
@@ -11,7 +11,7 @@
 - [x] T003 — Drizzle ORM einrichten und Datenbankverbindung herstellen
 - [x] T004 — Drizzle-Schema für organizations und users anlegen
 - [x] T005 — Drizzle-Schema für roles und permissions anlegen
-- [ ] T006 — Auth-System einrichten (Login, Sessions)
+- [x] T006 — Auth-System einrichten (Login, Sessions)
 - [ ] T007 — RBAC-Middleware und Permission-Checks implementieren
 - [ ] T008 — Seed-Skript für Basis-Daten
 
