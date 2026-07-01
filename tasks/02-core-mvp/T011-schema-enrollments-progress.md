@@ -1,7 +1,7 @@
 # T011: Drizzle-Schema für enrollments und block_progress anlegen
 
 **Phase:** 02-core-mvp
-**Status:** offen
+**Status:** erledigt (2026-07-01)
 **Abhängig von:** T010
 
 ## Kontext
@@ -13,23 +13,30 @@ Die Tabellen `enrollments` und `block_progress` existieren. Ein User kann in ein
 eingeschrieben werden und Fortschritt pro Block kann gespeichert werden.
 
 ## Schritte
-- [ ] `src/db/schema/enrollments.ts` — exakt nach Konzept: `id`, `user_id`, `course_id`,
+- [x] `src/db/schema/enrollments.ts` — exakt nach Konzept: `id`, `user_id`, `course_id`,
       `status`, `started_at`, `completed_at`; UNIQUE(user_id, course_id)
-- [ ] `src/db/schema/block-progress.ts` — `id`, `enrollment_id` (FK CASCADE), `block_id`,
+- [x] `src/db/schema/block-progress.ts` — `id`, `enrollment_id` (FK CASCADE), `block_id`,
       `status` (`not_started|in_progress|done|failed`), `attempts`, `score NUMERIC`,
       `submission_data JSONB`, `updated_at`
-- [ ] Drizzle-Relations: enrollment → block_progress (1:n), enrollment → user/course
-- [ ] Status-Enum als TypeScript-Union definieren (kein DB-Enum, string mit Validation)
-- [ ] Migration generieren und ausführen
+- [x] Drizzle-Relations: enrollment → block_progress (1:n), enrollment → user/course
+- [x] Status-Enum als TypeScript-Union definieren (kein DB-Enum, string mit Validation)
+- [x] Migration generieren und ausführen
 
 ## Abnahmekriterien
-- [ ] UNIQUE-Constraint auf `(user_id, course_id)` in `enrollments`
-- [ ] `ON DELETE CASCADE` bei `enrollment_id` in `block_progress`
-- [ ] Status-Werte sind typsicher (kein beliebiger String möglich)
-- [ ] `submission_data JSONB` für variable Einreichungsdaten vorhanden
+- [x] UNIQUE-Constraint auf `(user_id, course_id)` in `enrollments`
+- [x] `ON DELETE CASCADE` bei `enrollment_id` in `block_progress`
+- [x] Status-Werte sind typsicher (kein beliebiger String möglich)
+- [x] `submission_data JSONB` für variable Einreichungsdaten vorhanden
 
 ## Betroffene Dateien
 - `src/db/schema/enrollments.ts`, `src/db/schema/block-progress.ts` (neu)
 - `src/db/schema/index.ts`
 
 ## Notizen
+Abweichend vom wörtlichen Konzept-SQL (das für `block_id` kein explizites `ON DELETE`
+nennt) wurde `block_id` in `block_progress` mit `ON DELETE CASCADE` versehen: sonst
+würde das Löschen eines einzelnen Content-Blocks (T017, Block entfernen) an bereits
+existierendem Fortschritt scheitern. `enrollments.status` als TS-Union
+(`active|completed|dropped`) definiert, da im Konzept nur der Default `active` und
+`completed_at` explizit genannt sind. Migration `0007_redundant_roland_deschain.sql`
+erstellt und angewendet.

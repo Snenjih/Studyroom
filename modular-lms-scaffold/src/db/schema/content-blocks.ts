@@ -1,6 +1,7 @@
 import { relations } from 'drizzle-orm';
 import { index, integer, jsonb, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
+import { blockProgress } from './block-progress';
 import { courses } from './courses';
 
 // Content-Struktur je `block_type`, wird beim Speichern gegen die
@@ -38,9 +39,10 @@ export const contentBlocks = pgTable(
   (table) => [index('content_blocks_content_gin_idx').using('gin', table.content)],
 );
 
-export const contentBlocksRelations = relations(contentBlocks, ({ one }) => ({
+export const contentBlocksRelations = relations(contentBlocks, ({ one, many }) => ({
   course: one(courses, {
     fields: [contentBlocks.courseId],
     references: [courses.id],
   }),
+  blockProgress: many(blockProgress),
 }));

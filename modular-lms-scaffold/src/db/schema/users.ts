@@ -1,6 +1,7 @@
 import { relations } from 'drizzle-orm';
 import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
+import { enrollments } from './enrollments';
 import { organizations } from './organizations';
 import { userRoles } from './user-roles';
 
@@ -25,4 +26,5 @@ export const usersRelations = relations(users, ({ one, many }) => ({
     references: [organizations.id],
   }),
   userRoles: many(userRoles),
+  enrollments: many(enrollments),
 }));
