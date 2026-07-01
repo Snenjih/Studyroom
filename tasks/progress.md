@@ -1,6 +1,6 @@
 # Projekt-Fortschritt
 
-👉 **Nächste Task:** T015 — Dashboard-Seite (Übersicht eigener/zugewiesener Kurse)
+👉 **Nächste Task:** T016 — Programs-Verwaltungsseite (Liste + Create/Edit/Delete UI)
 
 ## Phase 00 — Bootstrap
 - [x] T000 — Vollständigen Task-Breakdown generieren (`tasks/00-bootstrap/`)
@@ -22,7 +22,7 @@
 - [x] T012 — Hartcodierte Course-Types als Seed-Daten anlegen
 - [x] T013 — Programs-CRUD-API (Route Handlers)
 - [x] T014 — Courses-CRUD-API (Route Handlers)
-- [ ] T015 — Dashboard-Seite (Übersicht eigener/zugewiesener Kurse)
+- [x] T015 — Dashboard-Seite (Übersicht eigener/zugewiesener Kurse)
 - [ ] T016 — Programs-Verwaltungsseite (Liste + Create/Edit/Delete UI)
 - [ ] T017 — Courses-Verwaltungsseite (Liste + Create/Edit/Delete UI)
 - [ ] T018 — Course-Type "Markdown-Info" — Renderer + Block-Editor
