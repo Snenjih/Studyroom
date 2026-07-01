@@ -41,9 +41,9 @@ docker compose down -v
 
 ## Stack
 
-| Service  | Image               | Purpose                       |
-|----------|---------------------|-------------------------------|
-| app      | (local build)       | Next.js application           |
-| postgres | postgres:16-alpine  | Primary database              |
-| redis    | redis:7-alpine      | Sessions / cache / job queue  |
-| minio    | minio/minio:latest  | S3-compatible file storage    |
+| Service  | Image              | Purpose                      |
+| -------- | ------------------ | ---------------------------- |
+| app      | (local build)      | Next.js application          |
+| postgres | postgres:16-alpine | Primary database             |
+| redis    | redis:7-alpine     | Sessions / cache / job queue |
+| minio    | minio/minio:latest | S3-compatible file storage   |
