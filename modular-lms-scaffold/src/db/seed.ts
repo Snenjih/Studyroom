@@ -4,8 +4,9 @@ import { PERMISSIONS } from '@/lib/permissions';
 import { hashPassword } from '@/lib/password';
 
 import { db } from './index';
-import { organizations, permissions, rolePermissions, roles, userRoles, users } from './schema';
+import { courseTypes, organizations, permissions, rolePermissions, roles, userRoles, users } from './schema';
 import { BASE_ROLES } from './seed-data/base-roles';
+import { BASE_COURSE_TYPES } from './seed-data/course-types';
 
 // Idempotent: mehrfaches Ausführen legt keine Duplikate an (T008-Abnahmekriterium).
 async function seed() {
@@ -58,6 +59,27 @@ async function seed() {
     }
   }
   console.log(`Rollen: ${[...roleIdByName.keys()].join(', ')}`);
+
+  for (const courseType of BASE_COURSE_TYPES) {
+    await db
+      .insert(courseTypes)
+      .values({
+        orgId: null,
+        key: courseType.key,
+        name: courseType.name,
+        schemaDefinition: courseType.schemaDefinition,
+        executionEngine: courseType.executionEngine,
+      })
+      .onConflictDoUpdate({
+        target: courseTypes.key,
+        set: {
+          name: courseType.name,
+          schemaDefinition: courseType.schemaDefinition,
+          executionEngine: courseType.executionEngine,
+        },
+      });
+  }
+  console.log(`Course-Types: ${BASE_COURSE_TYPES.map((c) => c.key).join(', ')}`);
 
   const adminEmail = process.env.ADMIN_EMAIL;
   const adminPassword = process.env.ADMIN_PASSWORD;

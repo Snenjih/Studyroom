@@ -1,6 +1,6 @@
 # Projekt-Fortschritt
 
-👉 **Nächste Task:** T012 — Hartcodierte Course-Types als Seed-Daten anlegen
+👉 **Nächste Task:** T013 — Programs-CRUD-API (Route Handlers)
 
 ## Phase 00 — Bootstrap
 - [x] T000 — Vollständigen Task-Breakdown generieren (`tasks/00-bootstrap/`)
@@ -19,7 +19,7 @@
 - [x] T009 — Drizzle-Schema für programs und courses anlegen
 - [x] T010 — Drizzle-Schema für content_blocks anlegen
 - [x] T011 — Drizzle-Schema für enrollments und block_progress anlegen
-- [ ] T012 — Hartcodierte Course-Types als Seed-Daten anlegen
+- [x] T012 — Hartcodierte Course-Types als Seed-Daten anlegen
 - [ ] T013 — Programs-CRUD-API (Route Handlers)
 - [ ] T014 — Courses-CRUD-API (Route Handlers)
 - [ ] T015 — Dashboard-Seite (Übersicht eigener/zugewiesener Kurse)
