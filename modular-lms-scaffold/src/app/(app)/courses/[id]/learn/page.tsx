@@ -64,7 +64,15 @@ export default async function LearnCoursePage({ params }: PageProps) {
                   content={block.content as unknown as Record<string, unknown>}
                   blockId={block.id}
                   enrollmentId={enrollment.id}
-                  progress={progress ? { status: progress.status, score: progress.score } : null}
+                  progress={
+                    progress
+                      ? {
+                          status: progress.status,
+                          score: progress.score,
+                          submissionData: progress.submissionData,
+                        }
+                      : null
+                  }
                   onComplete={onComplete}
                 />
               ) : (

@@ -1,6 +1,6 @@
 # Projekt-Fortschritt
 
-👉 **Nächste Task:** T020 — Course-Type "Einfaches Quiz" — Renderer + Block-Editor
+👉 **Nächste Task:** T021 — Enrollments-API (einschreiben, austragen, Status)
 
 ## Phase 00 — Bootstrap
 - [x] T000 — Vollständigen Task-Breakdown generieren (`tasks/00-bootstrap/`)
@@ -27,7 +27,7 @@
 - [x] T017 — Courses-Verwaltungsseite (Liste + Create/Edit/Delete UI)
 - [x] T018 — Course-Type "Markdown-Info" — Renderer + Block-Editor
 - [x] T019 — Course-Type "Flashcards" — Renderer + Block-Editor
-- [ ] T020 — Course-Type "Einfaches Quiz" — Renderer + Block-Editor
+- [x] T020 — Course-Type "Einfaches Quiz" — Renderer + Block-Editor
 - [ ] T021 — Enrollments-API (einschreiben, austragen, Status)
 - [ ] T022 — Progress-Tracking-API (Block-Status, Kursfortschritt)
 - [ ] T023 — Settings-Grundgerüst (zentrale Settings-Seite)
