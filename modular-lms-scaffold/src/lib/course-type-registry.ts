@@ -1,5 +1,7 @@
 import type { ComponentType } from 'react';
 
+import { FlashcardBlock } from '@/modules/course-types/flashcards/FlashcardBlock';
+import { FlashcardEditor } from '@/modules/course-types/flashcards/FlashcardEditor';
 import { MarkdownBlock } from '@/modules/course-types/markdown-info/MarkdownBlock';
 import { MarkdownEditor } from '@/modules/course-types/markdown-info/MarkdownEditor';
 
@@ -40,11 +42,15 @@ export interface CourseTypeModule {
 
 // Registry-Objekt je Course-Type-Key (Konzept Abschnitt 2/3: Module registrieren sich
 // hier). Wird von der Lern-Seite (Renderer) und vom Kurs-Editor (Editor) genutzt.
-// Wächst in T019/T020 um flashcards/quiz; das generische Modul-Lade-System folgt
-// erst in Phase 3 (T031).
+// Wächst in T020 noch um quiz; das generische Modul-Lade-System folgt erst in Phase 3
+// (T031).
 export const courseTypeRegistry: Record<string, CourseTypeModule> = {
   'markdown-info': {
     renderer: MarkdownBlock,
     editor: MarkdownEditor,
+  },
+  flashcards: {
+    renderer: FlashcardBlock,
+    editor: FlashcardEditor,
   },
 };
