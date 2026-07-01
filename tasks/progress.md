@@ -1,6 +1,6 @@
 # Projekt-Fortschritt
 
-👉 **Nächste Task:** T007 — RBAC-Middleware und Permission-Checks implementieren
+👉 **Nächste Task:** T008 — Seed-Skript für Basis-Daten
 
 ## Phase 00 — Bootstrap
 - [x] T000 — Vollständigen Task-Breakdown generieren (`tasks/00-bootstrap/`)
@@ -12,7 +12,7 @@
 - [x] T004 — Drizzle-Schema für organizations und users anlegen
 - [x] T005 — Drizzle-Schema für roles und permissions anlegen
 - [x] T006 — Auth-System einrichten (Login, Sessions)
-- [ ] T007 — RBAC-Middleware und Permission-Checks implementieren
+- [x] T007 — RBAC-Middleware und Permission-Checks implementieren
 - [ ] T008 — Seed-Skript für Basis-Daten
 
 ## Phase 02 — Core MVP (15 Tasks)

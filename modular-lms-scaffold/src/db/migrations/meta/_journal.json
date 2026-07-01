@@ -29,6 +29,13 @@
       "when": 1782897520087,
       "tag": "0003_clumsy_quicksilver",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1782898495835,
+      "tag": "0004_equal_spirit",
+      "breakpoints": true
     }
   ]
 }
