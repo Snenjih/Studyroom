@@ -9,10 +9,11 @@ interface BlockListItem {
 
 interface BlockListProps {
   courseId: string;
+  courseTypeKey: string;
   blocks: BlockListItem[];
 }
 
-export function BlockList({ courseId, blocks }: BlockListProps) {
+export function BlockList({ courseId, courseTypeKey, blocks }: BlockListProps) {
   if (blocks.length === 0) {
     return (
       <div className="rounded-lg border border-dashed border-zinc-800 bg-zinc-900/30 px-6 py-10 text-center">
@@ -27,6 +28,7 @@ export function BlockList({ courseId, blocks }: BlockListProps) {
         <BlockRow
           key={block.id}
           courseId={courseId}
+          courseTypeKey={courseTypeKey}
           blockId={block.id}
           blockType={block.blockType}
           content={block.content as Record<string, unknown>}

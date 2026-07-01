@@ -1,6 +1,6 @@
 # Projekt-Fortschritt
 
-👉 **Nächste Task:** T018 — Course-Type "Markdown-Info" — Renderer + Block-Editor
+👉 **Nächste Task:** T019 — Course-Type "Flashcards" — Renderer + Block-Editor
 
 ## Phase 00 — Bootstrap
 - [x] T000 — Vollständigen Task-Breakdown generieren (`tasks/00-bootstrap/`)
@@ -25,7 +25,7 @@
 - [x] T015 — Dashboard-Seite (Übersicht eigener/zugewiesener Kurse)
 - [x] T016 — Programs-Verwaltungsseite (Liste + Create/Edit/Delete UI)
 - [x] T017 — Courses-Verwaltungsseite (Liste + Create/Edit/Delete UI)
-- [ ] T018 — Course-Type "Markdown-Info" — Renderer + Block-Editor
+- [x] T018 — Course-Type "Markdown-Info" — Renderer + Block-Editor
 - [ ] T019 — Course-Type "Flashcards" — Renderer + Block-Editor
 - [ ] T020 — Course-Type "Einfaches Quiz" — Renderer + Block-Editor
 - [ ] T021 — Enrollments-API (einschreiben, austragen, Status)

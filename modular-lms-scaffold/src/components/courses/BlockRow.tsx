@@ -9,9 +9,11 @@ import type {
   MarkdownBlockContent,
   QuizQuestionBlockContent,
 } from '@/db/schema/content-blocks';
+import { courseTypeRegistry } from '@/lib/course-type-registry';
 
 interface BlockRowProps {
   courseId: string;
+  courseTypeKey: string;
   blockId: string;
   blockType: string;
   content: Record<string, unknown>;
@@ -26,7 +28,15 @@ const BLOCK_TYPE_LABELS: Record<string, string> = {
   'quiz-question': 'Quiz-Frage',
 };
 
-export function BlockRow({ courseId, blockId, blockType, content, isFirst, isLast }: BlockRowProps) {
+export function BlockRow({
+  courseId,
+  courseTypeKey,
+  blockId,
+  blockType,
+  content,
+  isFirst,
+  isLast,
+}: BlockRowProps) {
   const [draft, setDraft] = useState(content);
   const [isPending, startTransition] = useTransition();
   const [saved, setSaved] = useState(false);
@@ -72,7 +82,12 @@ export function BlockRow({ courseId, blockId, blockType, content, isFirst, isLas
         </div>
       </div>
 
-      <BlockContentFields blockType={blockType} draft={draft} onChange={setDraft} />
+      <RegisteredOrFallbackEditor
+        courseTypeKey={courseTypeKey}
+        blockType={blockType}
+        draft={draft}
+        onChange={setDraft}
+      />
 
       <div className="mt-3 flex items-center gap-3">
         <button
@@ -87,6 +102,30 @@ export function BlockRow({ courseId, blockId, blockType, content, isFirst, isLas
       </div>
     </li>
   );
+}
+
+interface RegisteredOrFallbackEditorProps {
+  courseTypeKey: string;
+  blockType: string;
+  draft: Record<string, unknown>;
+  onChange: (next: Record<string, unknown>) => void;
+}
+
+// Nutzt den registrierten Block-Editor aus dem course-type-registry, sobald einer
+// existiert (T018+: markdown-info, später flashcards/quiz). Ansonsten Fallback auf die
+// hier fest verdrahteten Felder — deckt auch zukünftige/eigene Course-Types generisch ab.
+function RegisteredOrFallbackEditor({
+  courseTypeKey,
+  blockType,
+  draft,
+  onChange,
+}: RegisteredOrFallbackEditorProps) {
+  const registered = courseTypeRegistry[courseTypeKey]?.editor;
+  if (registered) {
+    const Editor = registered;
+    return <Editor content={draft} onChange={onChange} />;
+  }
+  return <BlockContentFields blockType={blockType} draft={draft} onChange={onChange} />;
 }
 
 interface BlockContentFieldsProps {

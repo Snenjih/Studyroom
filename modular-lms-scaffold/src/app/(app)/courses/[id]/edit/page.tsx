@@ -65,7 +65,7 @@ export default async function EditCoursePage({ params }: PageProps) {
           Content-Blöcke
         </h2>
         <div className="flex flex-col gap-4">
-          <BlockList courseId={courseId} blocks={course.blocks} />
+          <BlockList courseId={courseId} courseTypeKey={course.courseType.key} blocks={course.blocks} />
           <AddBlockButton
             courseId={courseId}
             allowedBlockTypes={course.courseType.schemaDefinition.allowedBlockTypes}
