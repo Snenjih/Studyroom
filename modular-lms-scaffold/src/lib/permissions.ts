@@ -9,6 +9,7 @@ export const PERMISSIONS = {
   COURSES_EDIT_ANY: 'courses:edit:any',
   USERS_MANAGE: 'users:manage',
   SETTINGS_MANAGE: 'settings:manage',
+  ENROLLMENTS_MANAGE: 'enrollments:manage',
 } as const;
 
 export type PermissionKey = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];

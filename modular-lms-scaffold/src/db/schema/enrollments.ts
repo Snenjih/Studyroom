@@ -7,7 +7,7 @@ import { users } from './users';
 
 // Kein DB-Enum (Konzept Abschnitt 4/T011) — Status bleibt ein validierter String,
 // damit neue Status-Werte ohne Migration ergänzt werden können.
-export const ENROLLMENT_STATUSES = ['active', 'completed', 'dropped'] as const;
+export const ENROLLMENT_STATUSES = ['active', 'completed', 'dropped', 'inactive'] as const;
 export type EnrollmentStatus = (typeof ENROLLMENT_STATUSES)[number];
 
 export const enrollments = pgTable(

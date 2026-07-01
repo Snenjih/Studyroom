@@ -94,7 +94,7 @@ export async function createCourse(
   return { course };
 }
 
-async function courseBelongsToOrg(courseId: string, orgId: string) {
+export async function courseBelongsToOrg(courseId: string, orgId: string) {
   const [row] = await db
     .select({ id: courses.id })
     .from(courses)
