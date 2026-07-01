@@ -1,6 +1,6 @@
 # Projekt-Fortschritt
 
-👉 **Nächste Task:** T009 — Drizzle-Schema für programs und courses anlegen (Phase 01 abgeschlossen)
+👉 **Nächste Task:** T010 — Drizzle-Schema für content_blocks anlegen
 
 ## Phase 00 — Bootstrap
 - [x] T000 — Vollständigen Task-Breakdown generieren (`tasks/00-bootstrap/`)
@@ -16,7 +16,7 @@
 - [x] T008 — Seed-Skript für Basis-Daten
 
 ## Phase 02 — Core MVP (15 Tasks)
-- [ ] T009 — Drizzle-Schema für programs und courses anlegen
+- [x] T009 — Drizzle-Schema für programs und courses anlegen
 - [ ] T010 — Drizzle-Schema für content_blocks anlegen
 - [ ] T011 — Drizzle-Schema für enrollments und block_progress anlegen
 - [ ] T012 — Hartcodierte Course-Types als Seed-Daten anlegen
