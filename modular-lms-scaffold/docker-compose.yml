@@ -1,5 +1,6 @@
 services:
   app:
+    image: ghcr.io/${GHCR_OWNER:-snenjih}/studyroom:${IMAGE_TAG:-latest}
     build: .
     ports:
       - '3000:3000'
@@ -15,6 +16,7 @@ services:
     restart: unless-stopped
 
   db-init:
+    image: ghcr.io/${GHCR_OWNER:-snenjih}/studyroom-migrator:${IMAGE_TAG:-latest}
     build:
       context: .
       target: migrator
