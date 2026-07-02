@@ -23,10 +23,10 @@ docker compose up
 The app is available at **http://localhost:3000**.  
 MinIO web UI (file storage) is at **http://localhost:9001**.
 
-Pin a specific release instead of `latest`:
+Pin a specific release instead of `latest` (image tags drop the `v` prefix that git tags use):
 
 ```bash
-IMAGE_TAG=v1.2.3 docker compose up
+IMAGE_TAG=1.2.3 docker compose up
 ```
 
 ### Setup (build from source)
@@ -70,7 +70,7 @@ docker compose down -v
 
 Pushing a tag matching `v*.*.*` triggers the [Release workflow](.github/workflows/release.yml), which:
 
-1. Builds and pushes the `app` and `db-init` (migrator) images to [GHCR](https://github.com/Snenjih/Studyroom/pkgs/container/studyroom), tagged with the exact version (`v1.2.3`), the minor (`1.2`) and major (`1`) lines, and `latest`.
+1. Builds and pushes the `app` and `db-init` (migrator) images to [GHCR](https://github.com/Snenjih/Studyroom/pkgs/container/studyroom), tagged with the exact version (`1.2.3`, no `v` prefix), the minor (`1.2`) and major (`1`) lines, and `latest`.
 2. Creates a [GitHub Release](https://github.com/Snenjih/Studyroom/releases) for the tag with an auto-generated changelog from the commits/PRs since the previous release.
 
 Cutting a release:
