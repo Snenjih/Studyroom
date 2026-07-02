@@ -59,12 +59,12 @@ docker compose down -v
 ## Stack
 
 | Service  | Image                                | Purpose                      |
-| -------- | ------------------------------------- | ----------------------------- |
-| app      | `ghcr.io/snenjih/studyroom`           | Next.js application           |
-| db-init  | `ghcr.io/snenjih/studyroom-migrator`  | Runs migrations + seed once   |
-| postgres | postgres:16-alpine                    | Primary database              |
-| redis    | redis:7-alpine                        | Sessions / cache / job queue  |
-| minio    | minio/minio:latest                    | S3-compatible file storage    |
+| -------- | ------------------------------------ | ---------------------------- |
+| app      | `ghcr.io/snenjih/studyroom`          | Next.js application          |
+| db-init  | `ghcr.io/snenjih/studyroom-migrator` | Runs migrations + seed once  |
+| postgres | postgres:16-alpine                   | Primary database             |
+| redis    | redis:7-alpine                       | Sessions / cache / job queue |
+| minio    | minio/minio:latest                   | S3-compatible file storage   |
 
 ## Releases
 
