@@ -1,6 +1,7 @@
 # Projekt: Modulare Learning-Plattform
 
 ## Was das ist
+
 Selbstgehostete, Docker-basierte Lernplattform (vergleichbar ClassroomIO), aber mit
 vollständig frei definierbaren Course-Typen als wiederverwendbare Templates.
 
@@ -10,6 +11,7 @@ geschehen ist. Das Dokument ist die Quelle der Wahrheit für Architektur-Entsche
 bei Widersprüchen zwischen einer Task-Beschreibung und dem Konzept gilt das Konzept.
 
 ## Architektur-Kurzfassung (Details siehe docs/CONCEPT.md)
+
 - Core + Module-Pattern (Plugin-Config-Modell, siehe Konzept Abschnitt 2)
 - Domänenmodell: Organization → Program → Course → CourseType (Schema-Template) → ContentBlock
 - Eine Datenbank: Postgres, relationale Kern-Tabellen + JSONB für variable Course-Inhalte
@@ -19,11 +21,15 @@ bei Widersprüchen zwischen einer Task-Beschreibung und dem Konzept gilt das Kon
   Service auf, implementieren niemals eigenes Sandboxing (Konzept Abschnitt 6)
 
 ## Tech-Stack (festgelegt, nicht ohne Rücksprache mit dem Nutzer ändern)
+
 - Next.js + TypeScript
 - Postgres + Drizzle ORM
 - Docker Compose für Self-Hosting (App, Postgres, Redis, MinIO, Sandbox-Service)
 
+@AGENTS.md
+
 ## Arbeitsweise in diesem Projekt
+
 - Alle Arbeitsschritte sind als granulare Tasks in `tasks/<phase>/T0xx-*.md` abgelegt,
   Gesamtübersicht in `tasks/progress.md`.
 - Um die nächste offene Task zu bearbeiten: Slash-Command `/next-task` verwenden.

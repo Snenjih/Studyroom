@@ -8,9 +8,6 @@ jobs:
   code-quality:
     name: Code Quality
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: modular-lms-scaffold
 
     steps:
       - uses: actions/checkout@v4
@@ -19,7 +16,7 @@ jobs:
         with:
           node-version: '22'
           cache: npm
-          cache-dependency-path: modular-lms-scaffold/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -36,9 +33,6 @@ jobs:
   build:
     name: Next.js Build
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: modular-lms-scaffold
 
     steps:
       - uses: actions/checkout@v4
@@ -47,7 +41,7 @@ jobs:
         with:
           node-version: '22'
           cache: npm
-          cache-dependency-path: modular-lms-scaffold/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -61,9 +55,6 @@ jobs:
   docker:
     name: Docker Stack
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: modular-lms-scaffold
 
     steps:
       - uses: actions/checkout@v4

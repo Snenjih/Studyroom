@@ -3,11 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - "v*.*.*"
-
-defaults:
-  run:
-    working-directory: modular-lms-scaffold
+      - 'v*.*.*'
 
 env:
   REGISTRY: ghcr.io
@@ -59,7 +55,7 @@ jobs:
       - name: Build & push app image
         uses: docker/build-push-action@v6
         with:
-          context: modular-lms-scaffold
+          context: .
           target: runner
           push: true
           tags: ${{ steps.meta-app.outputs.tags }}
@@ -81,7 +77,7 @@ jobs:
       - name: Build & push migrator image
         uses: docker/build-push-action@v6
         with:
-          context: modular-lms-scaffold
+          context: .
           target: migrator
           push: true
           tags: ${{ steps.meta-migrator.outputs.tags }}
