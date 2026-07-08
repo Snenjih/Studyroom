@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { SettingsForm } from '@/components/settings/SettingsForm';
@@ -23,6 +24,22 @@ export default async function SettingsPage() {
       </p>
       <div className="mt-8">
         <SettingsForm action={updateOrgSettingsAction} defaultValues={settings} />
+      </div>
+
+      <div className="mt-12 border-t border-zinc-800/70 pt-6">
+        <p className="font-mono text-[11px] uppercase tracking-wider text-zinc-500">
+          Weitere Einstellungen
+        </p>
+        <ul className="mt-3 flex flex-col gap-2">
+          <li>
+            <Link
+              href="/settings/course-types"
+              className="text-sm text-cyan-400 transition-colors hover:text-cyan-300"
+            >
+              Course-Types →
+            </Link>
+          </li>
+        </ul>
       </div>
     </div>
   );
