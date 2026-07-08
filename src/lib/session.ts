@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { SignJWT, jwtVerify, type JWTPayload } from 'jose';
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 const SESSION_COOKIE = 'session';
@@ -41,9 +41,17 @@ export async function createSession(userId: string, orgId: string) {
   const expiresAt = new Date(Date.now() + SESSION_DURATION_MS);
   const token = await encrypt({ userId, orgId });
   const cookieStore = await cookies();
+  const headerList = await headers();
   cookieStore.set(SESSION_COOKIE, token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    // An `x-forwarded-proto: https`, nicht an NODE_ENV gekoppelt: Self-Hosting läuft
+    // standardmäßig ohne eigenen Reverse-Proxy (siehe docker-compose.yml) über reines
+    // HTTP, obwohl das Docker-Image mit NODE_ENV=production baut. Ein hartes
+    // `secure: true` in diesem Fall führt dazu, dass Browser das Cookie nach dem
+    // Login-Redirect stillschweigend verwerfen (Login wirkt erfolgreich, Sessions
+    // greifen aber nie) — verwendet nur `x-forwarded-proto`, damit ein TLS-terminierender
+    // Reverse-Proxy davor weiterhin `secure: true` aktiviert.
+    secure: headerList.get('x-forwarded-proto') === 'https',
     expires: expiresAt,
     sameSite: 'lax',
     path: '/',
