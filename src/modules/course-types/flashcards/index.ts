@@ -10,6 +10,8 @@ if (!definition) throw new Error('flashcards fehlt in BASE_COURSE_TYPES');
 export const flashcardsModule: AppModule = {
   key: 'flashcards',
   version: '1.0.0',
+  name: 'Flashcards',
+  description: 'Karteikarten zum Umdrehen — „Gewusst“ / „Nochmal“.',
   register(config) {
     return {
       ...config,

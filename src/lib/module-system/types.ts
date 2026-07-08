@@ -78,10 +78,14 @@ export interface AppConfig {
 }
 
 // Ein Modul ist ein Package, das eine Funktion exportiert, die die App-Config
-// entgegennimmt und erweitert zurückgibt (Konzept Abschnitt 2).
+// entgegennimmt und erweitert zurückgibt (Konzept Abschnitt 2). `name`/`description`
+// sind rein informativ (T031: Anzeige in der Modul-Verwaltung), keine Pflichtfelder,
+// damit sie bestehende Module nicht brechen.
 export interface AppModule {
   key: string;
   version: string;
+  name?: string;
+  description?: string;
   register(config: AppConfig): AppConfig;
 }
 

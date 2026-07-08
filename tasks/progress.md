@@ -1,6 +1,6 @@
 # Projekt-Fortschritt
 
-👉 **Nächste Task:** T031 — Modul-Lade-Mechanismus (Konfigurationsbasiert)
+👉 **Nächste Task:** T032 — Content-Versionierung für Course-Types
 
 ## Bugfixes (außerhalb der Roadmap-Nummerierung)
 - [x] T020-BUGFIX — Quiz zählt falsche Antwort trotzdem als `done`/abgeschlossen, erledigt
@@ -44,7 +44,7 @@
 - [x] T028 — Type-Editor UI — Felder-Builder-Komponente
 - [x] T029 — Type-Editor UI — Vorschau-Renderer für Custom-Types
 - [x] T030 — Dynamische Permissions aus Modulen
-- [ ] T031 — Modul-Lade-Mechanismus (Konfigurationsbasiert)
+- [x] T031 — Modul-Lade-Mechanismus (Konfigurationsbasiert)
 - [ ] T032 — Content-Versionierung für Course-Types
 
 ## Phase 04 — Code-Execution-Modul (6 Tasks)

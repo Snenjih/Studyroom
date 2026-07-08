@@ -47,6 +47,14 @@ export default async function SettingsPage() {
               Rollen →
             </Link>
           </li>
+          <li>
+            <Link
+              href="/settings/modules"
+              className="text-sm text-cyan-400 transition-colors hover:text-cyan-300"
+            >
+              Module →
+            </Link>
+          </li>
         </ul>
       </div>
     </div>

@@ -12,6 +12,8 @@ if (!definition) throw new Error('markdown-info fehlt in BASE_COURSE_TYPES');
 export const markdownInfoModule: AppModule = {
   key: 'markdown-info',
   version: '1.0.0',
+  name: 'Markdown-Info',
+  description: 'Statischer Lesestoff — Markdown-Blöcke, kein Quiz.',
   register(config) {
     return {
       ...config,

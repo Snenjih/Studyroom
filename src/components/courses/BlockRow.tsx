@@ -1,5 +1,6 @@
 'use client';
 
+import type { ComponentType } from 'react';
 import { useState, useTransition } from 'react';
 
 import {
@@ -7,7 +8,6 @@ import {
   moveBlockAction,
   updateBlockContentAction,
 } from '@/app/(app)/courses/actions';
-import { getCourseTypeModule } from '@/app-config';
 import { GenericBlockEditor } from '@/components/course-renderer/GenericBlockEditor';
 import { ConfirmButton } from '@/components/ui/ConfirmButton';
 import type {
@@ -15,11 +15,11 @@ import type {
   MarkdownBlockContent,
   QuizQuestionBlockContent,
 } from '@/db/schema/content-blocks';
+import type { BlockEditorProps } from '@/lib/module-system';
 import type { FieldDefinition } from '@/lib/schema-definition/types';
 
 interface BlockRowProps {
   courseId: string;
-  courseTypeKey: string;
   blockId: string;
   blockType: string;
   content: Record<string, unknown>;
@@ -27,6 +27,7 @@ interface BlockRowProps {
   isFirst: boolean;
   isLast: boolean;
   fields?: FieldDefinition[];
+  registeredEditor?: ComponentType<BlockEditorProps>;
 }
 
 const BLOCK_TYPE_LABELS: Record<string, string> = {
@@ -37,13 +38,13 @@ const BLOCK_TYPE_LABELS: Record<string, string> = {
 
 export function BlockRow({
   courseId,
-  courseTypeKey,
   blockId,
   blockType,
   content,
   isFirst,
   isLast,
   fields,
+  registeredEditor,
 }: BlockRowProps) {
   const [draft, setDraft] = useState(content);
   const [isPending, startTransition] = useTransition();
@@ -91,11 +92,11 @@ export function BlockRow({
       </div>
 
       <RegisteredOrFallbackEditor
-        courseTypeKey={courseTypeKey}
         blockType={blockType}
         draft={draft}
         onChange={setDraft}
         fields={fields}
+        registeredEditor={registeredEditor}
       />
 
       <div className="mt-3 flex items-center gap-3">
@@ -116,28 +117,30 @@ export function BlockRow({
 }
 
 interface RegisteredOrFallbackEditorProps {
-  courseTypeKey: string;
   blockType: string;
   draft: Record<string, unknown>;
   onChange: (next: Record<string, unknown>) => void;
   fields?: FieldDefinition[];
+  registeredEditor?: ComponentType<BlockEditorProps>;
 }
 
 // Nutzt den registrierten Block-Editor aus dem Modul-System, sobald einer existiert
-// (T025: markdown-info, flashcards, quiz). Für Custom-Course-Types (T028, kein
-// registriertes Modul) übernimmt der generische Editor (T029) anhand der
-// `schema_definition`-Felder. Nur wenn beides fehlt (sollte praktisch nicht vorkommen),
-// greift der alte hart verdrahtete Fallback.
+// (T025: markdown-info, flashcards, quiz) — von der Server-Komponente `BlockList`
+// aufgelöst und als Prop durchgereicht (nicht hier per `getCourseTypeModule()`
+// nachgeschlagen, siehe Kommentar in `BlockList.tsx`: `ENABLED_MODULES`, T031, ist im
+// Client-Bundle nicht sichtbar). Für Custom-Course-Types (T028, kein registriertes
+// Modul) übernimmt der generische Editor (T029) anhand der `schema_definition`-Felder.
+// Nur wenn beides fehlt (sollte praktisch nicht vorkommen), greift der alte hart
+// verdrahtete Fallback.
 function RegisteredOrFallbackEditor({
-  courseTypeKey,
   blockType,
   draft,
   onChange,
   fields,
+  registeredEditor,
 }: RegisteredOrFallbackEditorProps) {
-  const registered = getCourseTypeModule(courseTypeKey)?.editor;
-  if (registered) {
-    const Editor = registered;
+  if (registeredEditor) {
+    const Editor = registeredEditor;
     return <Editor content={draft} onChange={onChange} />;
   }
   if (fields) {

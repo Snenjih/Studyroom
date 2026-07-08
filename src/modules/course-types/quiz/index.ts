@@ -10,6 +10,8 @@ if (!definition) throw new Error('quiz fehlt in BASE_COURSE_TYPES');
 export const quizModule: AppModule = {
   key: 'quiz',
   version: '1.0.0',
+  name: 'Einfaches Quiz',
+  description: 'Multiple-Choice-Fragen mit automatischer Auswertung.',
   register(config) {
     return {
       ...config,

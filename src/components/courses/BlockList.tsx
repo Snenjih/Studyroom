@@ -1,3 +1,4 @@
+import { getCourseTypeModule } from '@/app-config';
 import type { BlockTypeDefinition } from '@/lib/schema-definition/types';
 
 import { BlockRow } from './BlockRow';
@@ -25,13 +26,19 @@ export function BlockList({ courseId, courseTypeKey, allowedBlockTypes, blocks }
     );
   }
 
+  // Server-seitig aufgelöst (BlockList ist eine Server-Komponente) und als fertige
+  // Komponenten-Referenz an die Client-Komponente BlockRow durchgereicht: BlockRow darf
+  // `app-config.ts` selbst nicht importieren, da `ENABLED_MODULES` (T031) im
+  // Client-Bundle nicht sichtbar ist (nur `NEXT_PUBLIC_*`-Vars sind es) — das führte
+  // sonst zu einem Server/Client-Hydration-Mismatch, sobald ein Modul deaktiviert war.
+  const registeredEditor = getCourseTypeModule(courseTypeKey)?.editor;
+
   return (
     <ul className="flex flex-col gap-3">
       {blocks.map((block, index) => (
         <BlockRow
           key={block.id}
           courseId={courseId}
-          courseTypeKey={courseTypeKey}
           blockId={block.id}
           blockType={block.blockType}
           content={block.content as Record<string, unknown>}
@@ -39,6 +46,7 @@ export function BlockList({ courseId, courseTypeKey, allowedBlockTypes, blocks }
           isFirst={index === 0}
           isLast={index === blocks.length - 1}
           fields={allowedBlockTypes.find((entry) => entry.type === block.blockType)?.fields}
+          registeredEditor={registeredEditor}
         />
       ))}
     </ul>
