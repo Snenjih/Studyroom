@@ -58,3 +58,12 @@ test('getModules() gibt alle registrierten Module in Registrierungsreihenfolge z
 
   assert.deepEqual(registry.getModules(), [moduleA, moduleB]);
 });
+
+test('register() mit bereits registriertem Modul-Key ist ein No-Op', () => {
+  const registry = new ModuleRegistry();
+  registry.register(fakeCourseTypeModule('a'));
+  registry.register(fakeCourseTypeModule('a'));
+
+  assert.equal(registry.getModules().length, 1);
+  assert.equal(registry.getConfig().courseTypes.length, 1);
+});

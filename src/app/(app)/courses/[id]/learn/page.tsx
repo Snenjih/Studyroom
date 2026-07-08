@@ -1,11 +1,11 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { getCourseTypeModule } from '@/app-config';
 import { recordBlockProgressAction } from '@/app/(app)/courses/learn-actions';
 import { getCourseWithBlocks } from '@/lib/db/courses';
 import { getOrCreateEnrollment, listBlockProgressForEnrollment } from '@/lib/db/enrollments';
 import { setBlockProgress } from '@/lib/db/progress';
-import { courseTypeRegistry } from '@/lib/course-type-registry';
 import { requireSession } from '@/lib/session';
 
 interface PageProps {
@@ -30,7 +30,7 @@ export default async function LearnCoursePage({ params }: PageProps) {
   }
 
   const progressByBlock = await listBlockProgressForEnrollment(enrollment.id);
-  const registryEntry = courseTypeRegistry[course.courseType.key];
+  const registryEntry = getCourseTypeModule(course.courseType.key);
 
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-10 py-2">

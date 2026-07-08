@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react';
 
-import type { BlockRendererProps } from '@/lib/course-type-registry';
+import type { BlockRendererProps } from '@/lib/module-system';
 
 interface FlashcardContent {
   front: string;

@@ -7,13 +7,13 @@ import {
   moveBlockAction,
   updateBlockContentAction,
 } from '@/app/(app)/courses/actions';
+import { getCourseTypeModule } from '@/app-config';
 import { ConfirmButton } from '@/components/ui/ConfirmButton';
 import type {
   FlashcardBlockContent,
   MarkdownBlockContent,
   QuizQuestionBlockContent,
 } from '@/db/schema/content-blocks';
-import { courseTypeRegistry } from '@/lib/course-type-registry';
 
 interface BlockRowProps {
   courseId: string;
@@ -117,16 +117,16 @@ interface RegisteredOrFallbackEditorProps {
   onChange: (next: Record<string, unknown>) => void;
 }
 
-// Nutzt den registrierten Block-Editor aus dem course-type-registry, sobald einer
-// existiert (T018+: markdown-info, später flashcards/quiz). Ansonsten Fallback auf die
-// hier fest verdrahteten Felder — deckt auch zukünftige/eigene Course-Types generisch ab.
+// Nutzt den registrierten Block-Editor aus dem Modul-System, sobald einer existiert
+// (T025: markdown-info, flashcards, quiz). Ansonsten Fallback auf die hier fest
+// verdrahteten Felder — deckt auch zukünftige/eigene Course-Types generisch ab.
 function RegisteredOrFallbackEditor({
   courseTypeKey,
   blockType,
   draft,
   onChange,
 }: RegisteredOrFallbackEditorProps) {
-  const registered = courseTypeRegistry[courseTypeKey]?.editor;
+  const registered = getCourseTypeModule(courseTypeKey)?.editor;
   if (registered) {
     const Editor = registered;
     return <Editor content={draft} onChange={onChange} />;

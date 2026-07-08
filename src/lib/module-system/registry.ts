@@ -5,7 +5,10 @@ import { type AppConfig, type AppModule, createBaseConfig } from './types';
 export class ModuleRegistry {
   private modules: AppModule[] = [];
 
+  // Idempotent nach `module.key`: verhindert doppelte Registrierung, falls das
+  // Root-Config-Modul (z.B. durch Dev-Server-Neuausführung) mehrfach importiert wird.
   register(module: AppModule): void {
+    if (this.modules.some((existing) => existing.key === module.key)) return;
     this.modules.push(module);
   }
 
