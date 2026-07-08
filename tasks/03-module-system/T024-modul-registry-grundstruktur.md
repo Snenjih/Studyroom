@@ -1,7 +1,7 @@
 # T024: Modul-Registry Grundstruktur (AppConfig-Pattern)
 
 **Phase:** 03-module-system
-**Status:** offen
+**Status:** erledigt (2026-07-08)
 **Abhängig von:** T023
 
 ## Kontext
@@ -13,22 +13,32 @@ Die TypeScript-Typen für `AppConfig` und `AppModule` existieren. Eine `ModuleRe
 kann Module registrieren und die resultierende Gesamt-Konfiguration auflösen.
 
 ## Schritte
-- [ ] `src/lib/module-system/types.ts` — `AppConfig`, `AppModule` Interfaces nach Konzept
+- [x] `src/lib/module-system/types.ts` — `AppConfig`, `AppModule` Interfaces nach Konzept
       Abschnitt 2 (courseTypes, permissions, settingsPanels, hooks)
-- [ ] `src/lib/module-system/registry.ts` — `ModuleRegistry`-Klasse:
+- [x] `src/lib/module-system/registry.ts` — `ModuleRegistry`-Klasse:
       `register(module)`, `getConfig()` (Module nacheinander anwenden)
-- [ ] `src/lib/module-system/index.ts` — Singleton-Registry-Instanz
-- [ ] `src/app-config.ts` — Root-Konfiguration (Core-Defaults + Modul-Registration)
-- [ ] Unit-Tests für Registry: Module werden korrekt angewendet, Config akkumuliert
+- [x] `src/lib/module-system/index.ts` — Singleton-Registry-Instanz
+- [x] `src/app-config.ts` — Root-Konfiguration (Core-Defaults + Modul-Registration)
+- [x] Unit-Tests für Registry: Module werden korrekt angewendet, Config akkumuliert
 
 ## Abnahmekriterien
-- [ ] `ModuleRegistry.register(module)` ruft `module.register(config)` auf
-- [ ] Mehrere Module können registriert werden, Config wird akkumuliert
-- [ ] `AppConfig` enthält: `courseTypes[]`, `permissions[]`, `settingsPanels[]`, `hooks`
-- [ ] TypeScript-Compile ohne Fehler
+- [x] `ModuleRegistry.register(module)` ruft `module.register(config)` auf
+- [x] Mehrere Module können registriert werden, Config wird akkumuliert
+- [x] `AppConfig` enthält: `courseTypes[]`, `permissions[]`, `settingsPanels[]`, `hooks`
+- [x] TypeScript-Compile ohne Fehler
 
 ## Betroffene Dateien
 - `src/lib/module-system/types.ts`, `registry.ts`, `index.ts` (neu)
 - `src/app-config.ts` (neu)
 
 ## Notizen
+- `BlockRendererProps`/`BlockEditorProps`/`BlockProgressStatus` etc. wurden von
+  `src/lib/course-type-registry.ts` (T018) hierher als kanonische Definition verschoben,
+  da dieses Modul in T025 durch das neue Modul-System ersetzt wird.
+- `CourseTypeModuleDefinition.schemaDefinition` nutzt vorerst das bestehende
+  `CourseTypeSchemaDefinition`-Format aus `db/schema/course-types.ts` — T026 formalisiert
+  das Format erst als eigenen Schritt, ohne diese Struktur hier zu brechen.
+- Kein neues Test-Framework eingeführt: Unit-Tests laufen über Node's eingebauten
+  Test-Runner (`node --test`, Node 22) mit `tsx` als Loader (bereits Dev-Dependency) für
+  TS/Pfad-Alias-Unterstützung — kein zusätzliches Paket wie vitest/jest nötig. Neues
+  npm-Script: `npm test`.

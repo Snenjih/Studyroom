@@ -1,6 +1,6 @@
 # Projekt-Fortschritt
 
-👉 **Nächste Task:** T024 — Modul-Registry Grundstruktur (AppConfig-Pattern)
+👉 **Nächste Task:** T025 — Bestehende Course-Types als Module umbauen
 
 ## Bugfixes (außerhalb der Roadmap-Nummerierung)
 - [x] T020-BUGFIX — Quiz zählt falsche Antwort trotzdem als `done`/abgeschlossen, erledigt
@@ -37,7 +37,7 @@
 - [x] T023 — Settings-Grundgerüst (zentrale Settings-Seite)
 
 ## Phase 03 — Modul-System & Type-Engine (9 Tasks)
-- [ ] T024 — Modul-Registry Grundstruktur (AppConfig-Pattern)
+- [x] T024 — Modul-Registry Grundstruktur (AppConfig-Pattern)
 - [ ] T025 — Bestehende Course-Types als Module umbauen
 - [ ] T026 — Generisches schema_definition-System für Course-Types
 - [ ] T027 — Schema-Validierungsschicht für content_blocks
