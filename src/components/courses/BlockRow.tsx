@@ -8,12 +8,14 @@ import {
   updateBlockContentAction,
 } from '@/app/(app)/courses/actions';
 import { getCourseTypeModule } from '@/app-config';
+import { GenericBlockEditor } from '@/components/course-renderer/GenericBlockEditor';
 import { ConfirmButton } from '@/components/ui/ConfirmButton';
 import type {
   FlashcardBlockContent,
   MarkdownBlockContent,
   QuizQuestionBlockContent,
 } from '@/db/schema/content-blocks';
+import type { FieldDefinition } from '@/lib/schema-definition/types';
 
 interface BlockRowProps {
   courseId: string;
@@ -24,6 +26,7 @@ interface BlockRowProps {
   position: number;
   isFirst: boolean;
   isLast: boolean;
+  fields?: FieldDefinition[];
 }
 
 const BLOCK_TYPE_LABELS: Record<string, string> = {
@@ -40,6 +43,7 @@ export function BlockRow({
   content,
   isFirst,
   isLast,
+  fields,
 }: BlockRowProps) {
   const [draft, setDraft] = useState(content);
   const [isPending, startTransition] = useTransition();
@@ -91,6 +95,7 @@ export function BlockRow({
         blockType={blockType}
         draft={draft}
         onChange={setDraft}
+        fields={fields}
       />
 
       <div className="mt-3 flex items-center gap-3">
@@ -115,21 +120,28 @@ interface RegisteredOrFallbackEditorProps {
   blockType: string;
   draft: Record<string, unknown>;
   onChange: (next: Record<string, unknown>) => void;
+  fields?: FieldDefinition[];
 }
 
 // Nutzt den registrierten Block-Editor aus dem Modul-System, sobald einer existiert
-// (T025: markdown-info, flashcards, quiz). Ansonsten Fallback auf die hier fest
-// verdrahteten Felder — deckt auch zukünftige/eigene Course-Types generisch ab.
+// (T025: markdown-info, flashcards, quiz). Für Custom-Course-Types (T028, kein
+// registriertes Modul) übernimmt der generische Editor (T029) anhand der
+// `schema_definition`-Felder. Nur wenn beides fehlt (sollte praktisch nicht vorkommen),
+// greift der alte hart verdrahtete Fallback.
 function RegisteredOrFallbackEditor({
   courseTypeKey,
   blockType,
   draft,
   onChange,
+  fields,
 }: RegisteredOrFallbackEditorProps) {
   const registered = getCourseTypeModule(courseTypeKey)?.editor;
   if (registered) {
     const Editor = registered;
     return <Editor content={draft} onChange={onChange} />;
+  }
+  if (fields) {
+    return <GenericBlockEditor fields={fields} content={draft} onChange={onChange} />;
   }
   return <BlockContentFields blockType={blockType} draft={draft} onChange={onChange} />;
 }

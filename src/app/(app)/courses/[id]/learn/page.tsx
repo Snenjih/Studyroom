@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 
 import { getCourseTypeModule } from '@/app-config';
 import { recordBlockProgressAction } from '@/app/(app)/courses/learn-actions';
+import { GenericBlockRenderer } from '@/components/course-renderer/GenericBlockRenderer';
 import { getCourseWithBlocks } from '@/lib/db/courses';
 import { getOrCreateEnrollment, listBlockProgressForEnrollment } from '@/lib/db/enrollments';
 import { setBlockProgress } from '@/lib/db/progress';
@@ -55,6 +56,9 @@ export default async function LearnCoursePage({ params }: PageProps) {
 
         {course.blocks.map((block) => {
           const Renderer = registryEntry?.renderer;
+          const fields = course.courseType.schemaDefinition.allowedBlockTypes.find(
+            (entry) => entry.type === block.blockType,
+          )?.fields;
           const progress = progressByBlock.get(block.id);
           const onComplete = recordBlockProgressAction.bind(
             null,
@@ -62,6 +66,13 @@ export default async function LearnCoursePage({ params }: PageProps) {
             enrollment.id,
             block.id,
           );
+          const progressSummary = progress
+            ? {
+                status: progress.status,
+                score: progress.score,
+                submissionData: progress.submissionData,
+              }
+            : null;
 
           return (
             <section
@@ -73,15 +84,14 @@ export default async function LearnCoursePage({ params }: PageProps) {
                   content={block.content as unknown as Record<string, unknown>}
                   blockId={block.id}
                   enrollmentId={enrollment.id}
-                  progress={
-                    progress
-                      ? {
-                          status: progress.status,
-                          score: progress.score,
-                          submissionData: progress.submissionData,
-                        }
-                      : null
-                  }
+                  progress={progressSummary}
+                  onComplete={onComplete}
+                />
+              ) : fields ? (
+                <GenericBlockRenderer
+                  fields={fields}
+                  content={block.content as unknown as Record<string, unknown>}
+                  progress={progressSummary}
                   onComplete={onComplete}
                 />
               ) : (

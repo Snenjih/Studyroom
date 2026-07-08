@@ -4,15 +4,11 @@ import { useState, useTransition } from 'react';
 
 import { addBlockAction } from '@/app/(app)/courses/actions';
 import { defaultBlockContent } from '@/lib/block-defaults';
-
-interface AllowedBlockType {
-  type: string;
-  fields: { name: string; type: string; required: boolean }[];
-}
+import type { BlockTypeDefinition } from '@/lib/schema-definition/types';
 
 interface AddBlockButtonProps {
   courseId: string;
-  allowedBlockTypes: AllowedBlockType[];
+  allowedBlockTypes: BlockTypeDefinition[];
 }
 
 const BLOCK_TYPE_LABELS: Record<string, string> = {
@@ -24,6 +20,7 @@ const BLOCK_TYPE_LABELS: Record<string, string> = {
 export function AddBlockButton({ courseId, allowedBlockTypes }: AddBlockButtonProps) {
   const [selected, setSelected] = useState(allowedBlockTypes[0]?.type ?? '');
   const [isPending, startTransition] = useTransition();
+  const selectedFields = allowedBlockTypes.find((blockType) => blockType.type === selected)?.fields;
 
   if (allowedBlockTypes.length === 0) return null;
 
@@ -47,7 +44,9 @@ export function AddBlockButton({ courseId, allowedBlockTypes }: AddBlockButtonPr
         type="button"
         disabled={isPending || !selected}
         onClick={() =>
-          startTransition(() => addBlockAction(courseId, selected, defaultBlockContent(selected)))
+          startTransition(() =>
+            addBlockAction(courseId, selected, defaultBlockContent(selected, selectedFields)),
+          )
         }
         className="rounded bg-cyan-400 px-3 py-1.5 text-sm font-medium text-zinc-950 transition-colors hover:bg-cyan-300 disabled:opacity-50"
       >

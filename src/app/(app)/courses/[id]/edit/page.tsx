@@ -66,6 +66,7 @@ export default async function EditCoursePage({ params }: PageProps) {
           <BlockList
             courseId={courseId}
             courseTypeKey={course.courseType.key}
+            allowedBlockTypes={course.courseType.schemaDefinition.allowedBlockTypes}
             blocks={course.blocks}
           />
           <AddBlockButton

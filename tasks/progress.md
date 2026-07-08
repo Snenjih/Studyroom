@@ -1,6 +1,6 @@
 # Projekt-Fortschritt
 
-👉 **Nächste Task:** T029 — Type-Editor UI — Vorschau-Renderer für Custom-Types
+👉 **Nächste Task:** T030 — Dynamische Permissions aus Modulen
 
 ## Bugfixes (außerhalb der Roadmap-Nummerierung)
 - [x] T020-BUGFIX — Quiz zählt falsche Antwort trotzdem als `done`/abgeschlossen, erledigt
@@ -42,7 +42,7 @@
 - [x] T026 — Generisches schema_definition-System für Course-Types
 - [x] T027 — Schema-Validierungsschicht für content_blocks
 - [x] T028 — Type-Editor UI — Felder-Builder-Komponente
-- [ ] T029 — Type-Editor UI — Vorschau-Renderer für Custom-Types
+- [x] T029 — Type-Editor UI — Vorschau-Renderer für Custom-Types
 - [ ] T030 — Dynamische Permissions aus Modulen
 - [ ] T031 — Modul-Lade-Mechanismus (Konfigurationsbasiert)
 - [ ] T032 — Content-Versionierung für Course-Types
