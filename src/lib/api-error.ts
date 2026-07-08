@@ -1,13 +1,21 @@
 import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 
+import { BlockValidationError } from './db/courses';
 import { ForbiddenError } from './rbac';
 
 // Zentrale Fehlerabbildung für Route Handlers: ForbiddenError -> 403,
-// Zod-Validierungsfehler -> 400 mit verständlicher Meldung, Rest -> 500.
+// Zod-Validierungsfehler / BlockValidationError -> 400 mit verständlicher Meldung,
+// Rest -> 500.
 export function toErrorResponse(error: unknown): NextResponse {
   if (error instanceof ForbiddenError) {
     return NextResponse.json({ error: error.message }, { status: 403 });
+  }
+  if (error instanceof BlockValidationError) {
+    return NextResponse.json(
+      { error: 'Validierungsfehler', details: error.errors },
+      { status: 400 },
+    );
   }
   if (error instanceof ZodError) {
     return NextResponse.json(

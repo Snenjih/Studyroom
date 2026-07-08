@@ -10,6 +10,15 @@ const quizSchema: SchemaDefinition = BASE_COURSE_TYPES.find(
   (courseType) => courseType.key === 'quiz',
 )!.schemaDefinition;
 
+test('validateBlock() lehnt grob falsch geformten Input ab (Zod-Envelope-Check)', () => {
+  const result = validateBlock(
+    { blockType: 'quiz-question', content: 'kein-objekt' as unknown as Record<string, unknown> },
+    quizSchema,
+  );
+  assert.equal(result.valid, false);
+  assert.ok(result.errors.length > 0);
+});
+
 test('validateBlock() lehnt unbekannten block_type ab', () => {
   const result = validateBlock({ blockType: 'not-a-real-type', content: {} }, quizSchema);
   assert.equal(result.valid, false);
@@ -66,6 +75,27 @@ test('validateBlock() prüft number-Feld-Typ', () => {
   );
   assert.equal(result.valid, false);
   assert.ok(result.errors.some((error) => error.field === 'correct_index'));
+});
+
+test('validateBlock() meldet einen unbekannten Feld-Typ statt eine falsch geformte Rückgabe', () => {
+  const schemaWithUnknownFieldType: SchemaDefinition = {
+    allowedBlockTypes: [
+      {
+        type: 'legacy-block',
+        // Simuliert veraltete DB-Zeilen mit dem Vor-T026-Feld-Typ-Vokabular
+        // ('string' statt 'text'/'markdown').
+        fields: [{ name: 'content', type: 'string', required: true } as never],
+      },
+    ],
+  };
+  const result = validateBlock(
+    { blockType: 'legacy-block', content: { content: 'irgendwas' } },
+    schemaWithUnknownFieldType,
+  );
+  assert.equal(result.valid, false);
+  assert.equal(result.errors.length, 1);
+  assert.equal(result.errors[0]?.field, 'content');
+  assert.match(result.errors[0]?.message ?? '', /Unbekannter Feld-Typ/);
 });
 
 test('validateBlock() akzeptiert gültigen Markdown-Block', () => {

@@ -4,6 +4,7 @@ import { and, asc, eq, max } from 'drizzle-orm';
 
 import { db } from '@/db';
 import { type BlockContent, contentBlocks, courses, courseTypes, programs } from '@/db/schema';
+import { validateBlock, type ValidationError } from '@/lib/schema-definition/validator';
 
 import type {
   CreateBlockInput,
@@ -11,6 +12,16 @@ import type {
   UpdateBlockInput,
   UpdateCourseInput,
 } from '../schemas/course';
+
+// Wird geworfen, wenn `content`/`block_type` nicht gegen die `schema_definition`
+// des Course-Types besteht (Konzept Abschnitt 4). `toErrorResponse()` (api-error.ts)
+// bildet das zentral auf eine 400-Response mit den einzelnen Feldfehlern ab.
+export class BlockValidationError extends Error {
+  constructor(public readonly errors: ValidationError[]) {
+    super('Block-Validierung fehlgeschlagen');
+    this.name = 'BlockValidationError';
+  }
+}
 
 // Alle Courses-Queries prüfen den Org-Scope über einen Join auf `programs`,
 // da `courses` selbst keine `org_id`-Spalte hat (gehört immer zu genau einem Program).
@@ -104,6 +115,19 @@ export async function courseBelongsToOrg(courseId: string, orgId: string) {
   return Boolean(row);
 }
 
+// Lädt den Course-Type (inkl. `schema_definition`) eines Kurses, org-gescoped —
+// Grundlage für die Content-Block-Validierung (Konzept Abschnitt 4).
+async function getCourseTypeForCourse(courseId: string, orgId: string) {
+  const [row] = await db
+    .select({ courseType: courseTypes })
+    .from(courses)
+    .innerJoin(programs, eq(courses.programId, programs.id))
+    .innerJoin(courseTypes, eq(courses.courseTypeId, courseTypes.id))
+    .where(and(eq(courses.id, courseId), eq(programs.orgId, orgId)))
+    .limit(1);
+  return row?.courseType ?? null;
+}
+
 export async function updateCourse(id: string, orgId: string, input: UpdateCourseInput) {
   if (!(await courseBelongsToOrg(id, orgId))) {
     return { error: 'course_not_found' as const };
@@ -132,7 +156,14 @@ export async function listBlocks(courseId: string, orgId: string) {
 }
 
 export async function createBlock(courseId: string, orgId: string, input: CreateBlockInput) {
-  if (!(await courseBelongsToOrg(courseId, orgId))) return null;
+  const courseType = await getCourseTypeForCourse(courseId, orgId);
+  if (!courseType) return null;
+
+  const validation = validateBlock(
+    { blockType: input.blockType, content: input.content },
+    courseType.schemaDefinition,
+  );
+  if (!validation.valid) throw new BlockValidationError(validation.errors);
 
   const [row] = await db
     .select({ maxPosition: max(contentBlocks.position) })
@@ -158,7 +189,22 @@ export async function updateBlock(
   orgId: string,
   input: UpdateBlockInput,
 ) {
-  if (!(await courseBelongsToOrg(courseId, orgId))) return null;
+  const courseType = await getCourseTypeForCourse(courseId, orgId);
+  if (!courseType) return null;
+
+  const [existing] = await db
+    .select({ blockType: contentBlocks.blockType })
+    .from(contentBlocks)
+    .where(and(eq(contentBlocks.id, blockId), eq(contentBlocks.courseId, courseId)))
+    .limit(1);
+  if (!existing) return null;
+
+  const validation = validateBlock(
+    { blockType: existing.blockType, content: input.content },
+    courseType.schemaDefinition,
+  );
+  if (!validation.valid) throw new BlockValidationError(validation.errors);
+
   const [block] = await db
     .update(contentBlocks)
     .set({ content: input.content as unknown as BlockContent })

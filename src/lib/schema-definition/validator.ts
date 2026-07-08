@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 import type { FieldDefinition, SchemaDefinition } from './types';
 
 export interface ValidationError {
@@ -15,8 +17,22 @@ export interface BlockLike {
   content: Record<string, unknown>;
 }
 
+// Zod-Absicherung der äußeren Block-Hülle (Konzept Abschnitt 4: Validierung "z.B. mit
+// zod ... in der App-Schicht"): schützt vor grob falsch geformtem Input (z.B. `content`
+// ist kein Objekt), BEVOR die feldweise Prüfung unten überhaupt anfängt. Die
+// feldweise Prüfung selbst bleibt hand-geschrieben, da sie eng an das dynamische
+// `FieldDefinition`-Format gekoppelt ist (Feld-Typ pro Course-Type, nicht vorab bekannt).
+const blockEnvelopeSchema = z.object({
+  blockType: z.string().min(1),
+  content: z.record(z.string(), z.unknown()),
+});
+
+// Bewusst NUR undefined/null als "fehlt" gewertet, nicht leere Strings: neu über
+// AddBlockButton angelegte Blöcke starten mit leeren Default-Werten
+// (`defaultBlockContent()`) und werden erst danach im Editor befüllt — ein leerer,
+// aber vorhandener Pflicht-Feldwert darf das erste Speichern nicht mit 400 blockieren.
 function isMissing(value: unknown): boolean {
-  return value === undefined || value === null || value === '';
+  return value === undefined || value === null;
 }
 
 function validateField(field: FieldDefinition, value: unknown): ValidationError[] {
@@ -97,8 +113,15 @@ function validateField(field: FieldDefinition, value: unknown): ValidationError[
       return errors;
     }
     default: {
-      const exhaustiveCheck: never = field;
-      return exhaustiveCheck;
+      // Laufzeit-Absicherung: `field` sollte laut Typ hier `never` sein, aber
+      // `schema_definition` kommt aus der DB (JSONB) — ein unbekannter/veralteter
+      // Feld-Typ (z.B. aus einer nicht neu geseedeten oder manuell editierten Zeile)
+      // muss als Validierungsfehler auffallen, statt eine falsch geformte Rückgabe
+      // an `flatMap()` weiterzureichen.
+      const unknownField = field as { name: string; type: string };
+      return [
+        { field: unknownField.name, message: `Unbekannter Feld-Typ: ${unknownField.type}` },
+      ];
     }
   }
 }
@@ -107,16 +130,29 @@ function validateField(field: FieldDefinition, value: unknown): ValidationError[
 // (Konzept Abschnitt 4). Wird von der DB-Speicherschicht (T027) vor jedem
 // Create/Update eines content_blocks aufgerufen.
 export function validateBlock(block: BlockLike, schema: SchemaDefinition): ValidationResult {
-  const blockTypeDef = schema.allowedBlockTypes.find((entry) => entry.type === block.blockType);
+  const envelope = blockEnvelopeSchema.safeParse(block);
+  if (!envelope.success) {
+    return {
+      valid: false,
+      errors: envelope.error.issues.map((issue) => ({
+        field: issue.path.join('.') || 'block',
+        message: issue.message,
+      })),
+    };
+  }
+
+  const blockTypeDef = schema.allowedBlockTypes.find(
+    (entry) => entry.type === envelope.data.blockType,
+  );
   if (!blockTypeDef) {
     return {
       valid: false,
-      errors: [{ field: 'blockType', message: `Unbekannter Block-Typ: ${block.blockType}` }],
+      errors: [{ field: 'blockType', message: `Unbekannter Block-Typ: ${envelope.data.blockType}` }],
     };
   }
 
   const errors = blockTypeDef.fields.flatMap((field) =>
-    validateField(field, block.content[field.name]),
+    validateField(field, envelope.data.content[field.name]),
   );
   return { valid: errors.length === 0, errors };
 }
