@@ -1,6 +1,6 @@
 # Projekt-Fortschritt
 
-👉 **Nächste Task:** T032 — Content-Versionierung für Course-Types
+👉 **Nächste Task:** T033 — Piston-Service im Docker-Compose-Stack ergänzen
 
 ## Bugfixes (außerhalb der Roadmap-Nummerierung)
 - [x] T020-BUGFIX — Quiz zählt falsche Antwort trotzdem als `done`/abgeschlossen, erledigt
@@ -45,7 +45,7 @@
 - [x] T029 — Type-Editor UI — Vorschau-Renderer für Custom-Types
 - [x] T030 — Dynamische Permissions aus Modulen
 - [x] T031 — Modul-Lade-Mechanismus (Konfigurationsbasiert)
-- [ ] T032 — Content-Versionierung für Course-Types
+- [x] T032 — Content-Versionierung für Course-Types
 
 ## Phase 04 — Code-Execution-Modul (6 Tasks)
 - [ ] T033 — Piston-Service im Docker-Compose-Stack ergänzen

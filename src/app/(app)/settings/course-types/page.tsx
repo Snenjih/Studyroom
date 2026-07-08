@@ -42,16 +42,26 @@ export default async function CourseTypesPage() {
           >
             <div>
               <p className="text-zinc-100">{courseType.name}</p>
-              <p className="font-mono text-[11px] text-zinc-500">{courseType.key}</p>
+              <p className="font-mono text-[11px] text-zinc-500">
+                {courseType.key} · v{courseType.version}
+              </p>
             </div>
             {isSystemCourseType(courseType) ? (
               <span className="font-mono text-[11px] uppercase tracking-wider text-zinc-600">
                 System · schreibgeschützt
               </span>
             ) : (
-              <span className="font-mono text-[11px] uppercase tracking-wider text-cyan-400/80">
-                Custom
-              </span>
+              <div className="flex items-center gap-4">
+                <span className="font-mono text-[11px] uppercase tracking-wider text-cyan-400/80">
+                  Custom
+                </span>
+                <Link
+                  href={`/settings/course-types/${courseType.id}/edit`}
+                  className="font-mono text-[11px] text-zinc-400 hover:text-cyan-300"
+                >
+                  Bearbeiten →
+                </Link>
+              </div>
             )}
           </li>
         ))}

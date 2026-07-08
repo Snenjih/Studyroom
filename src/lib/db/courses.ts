@@ -4,6 +4,7 @@ import { and, asc, eq, max } from 'drizzle-orm';
 
 import { db } from '@/db';
 import { type BlockContent, contentBlocks, courses, courseTypes, programs } from '@/db/schema';
+import { getSchemaDefinitionForVersion } from '@/lib/db/course-types';
 import { validateBlock, type ValidationError } from '@/lib/schema-definition/validator';
 
 import type {
@@ -178,6 +179,8 @@ export async function createBlock(courseId: string, orgId: string, input: Create
       position: nextPosition,
       blockType: input.blockType,
       content: input.content as unknown as BlockContent,
+      // Neue Blöcke nutzen immer die aktuelle Course-Type-Version (T032-Abnahmekriterium).
+      courseTypeVersion: courseType.version,
     })
     .returning();
   return block;
@@ -193,15 +196,22 @@ export async function updateBlock(
   if (!courseType) return null;
 
   const [existing] = await db
-    .select({ blockType: contentBlocks.blockType })
+    .select({ blockType: contentBlocks.blockType, courseTypeVersion: contentBlocks.courseTypeVersion })
     .from(contentBlocks)
     .where(and(eq(contentBlocks.id, blockId), eq(contentBlocks.courseId, courseId)))
     .limit(1);
   if (!existing) return null;
 
+  // Validiert gegen die Schema-Version, mit der der Block zuletzt gespeichert wurde
+  // (T032), nicht gegen die ggf. inzwischen neuere `courseType.schemaDefinition` —
+  // sonst würde ein Schema-Update bestehende Blöcke rückwirkend invalidieren.
+  const schemaDefinition =
+    (await getSchemaDefinitionForVersion(courseType, existing.courseTypeVersion)) ??
+    courseType.schemaDefinition;
+
   const validation = validateBlock(
     { blockType: existing.blockType, content: input.content },
-    courseType.schemaDefinition,
+    schemaDefinition,
   );
   if (!validation.valid) throw new BlockValidationError(validation.errors);
 

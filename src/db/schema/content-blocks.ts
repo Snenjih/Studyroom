@@ -36,6 +36,10 @@ export const contentBlocks = pgTable(
     position: integer('position').notNull(),
     blockType: text('block_type').notNull(),
     content: jsonb('content').$type<BlockContent>().notNull(),
+    // Version von `course_types.schema_definition`, gegen die dieser Block zuletzt
+    // gespeichert wurde (Konzept Abschnitt 9, T032) — bleibt unverändert, auch wenn
+    // der Course-Type später eine neuere Version bekommt ("kein Auto-Migrate").
+    courseTypeVersion: integer('course_type_version').notNull().default(1),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [index('content_blocks_content_gin_idx').using('gin', table.content)],

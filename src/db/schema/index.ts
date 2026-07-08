@@ -1,5 +1,6 @@
 export * from './block-progress';
 export * from './content-blocks';
+export * from './course-type-schema-versions';
 export * from './course-types';
 export * from './courses';
 export * from './enrollments';

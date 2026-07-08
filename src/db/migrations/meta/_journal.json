@@ -71,6 +71,13 @@
       "when": 1783518591782,
       "tag": "0009_petite_speed",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1783519901205,
+      "tag": "0010_sharp_drax",
+      "breakpoints": true
     }
   ]
 }

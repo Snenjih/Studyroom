@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import type { FieldRowDraft } from '@/components/type-editor/FieldBuilder';
 import { FIELD_TYPE_KEYS } from '@/lib/schema-definition/field-types';
 import type { FieldDefinition } from '@/lib/schema-definition/types';
 
@@ -16,6 +17,24 @@ const fieldRowSchema = z.object({
   itemType: z.enum(['text', 'number']).optional(),
 });
 
+type FieldRowsValue = { fields: { type: string; options?: string }[] };
+
+// Gemeinsame Cross-Field-Prüfung für Create + Update (T028/T032): select-Felder
+// brauchen mindestens 2 (kommagetrennte) Optionen.
+function checkSelectFieldOptions(value: FieldRowsValue, ctx: z.RefinementCtx): void {
+  value.fields.forEach((field, index) => {
+    if (field.type !== 'select') return;
+    const options = parseOptions(field.options);
+    if (options.length < 2) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['fields', index, 'options'],
+        message: 'Auswahl-Felder brauchen mindestens 2 Optionen (kommagetrennt).',
+      });
+    }
+  });
+}
+
 export const createCourseTypeSchema = z
   .object({
     key: z
@@ -26,21 +45,20 @@ export const createCourseTypeSchema = z
     name: z.string().trim().min(1, 'Name ist erforderlich.'),
     fields: z.array(fieldRowSchema).min(2, 'Mindestens 2 Felder sind erforderlich.'),
   })
-  .superRefine((value, ctx) => {
-    value.fields.forEach((field, index) => {
-      if (field.type !== 'select') return;
-      const options = parseOptions(field.options);
-      if (options.length < 2) {
-        ctx.addIssue({
-          code: 'custom',
-          path: ['fields', index, 'options'],
-          message: 'Auswahl-Felder brauchen mindestens 2 Optionen (kommagetrennt).',
-        });
-      }
-    });
-  });
+  .superRefine(checkSelectFieldOptions);
+
+// Der Key ist nach dem Anlegen unveränderlich (siehe CourseTypeForm: read-only im
+// Edit-Modus) — Update betrifft nur Name + Felder, erzeugt aber eine neue Version
+// (T032) statt den bestehenden Stand zu überschreiben.
+export const updateCourseTypeFieldsSchema = z
+  .object({
+    name: z.string().trim().min(1, 'Name ist erforderlich.'),
+    fields: z.array(fieldRowSchema).min(2, 'Mindestens 2 Felder sind erforderlich.'),
+  })
+  .superRefine(checkSelectFieldOptions);
 
 export type CreateCourseTypeInput = z.infer<typeof createCourseTypeSchema>;
+export type UpdateCourseTypeFieldsInput = z.infer<typeof updateCourseTypeFieldsSchema>;
 export type FieldRowInput = z.infer<typeof fieldRowSchema>;
 
 function parseOptions(raw: string | undefined): string[] {
@@ -70,4 +88,16 @@ export function toFieldDefinition(row: FieldRowInput): FieldDefinition {
     default:
       throw new Error(`Unbekannter Feld-Typ: ${row.type}`);
   }
+}
+
+// Umkehrung von `toFieldDefinition()` — Grundlage, um den Type-Editor (T028/T032) beim
+// Bearbeiten eines bestehenden Course-Types mit den aktuellen Feldern vorzubefüllen.
+export function toFieldRowDraft(field: FieldDefinition): FieldRowDraft {
+  return {
+    name: field.name,
+    type: field.type,
+    required: field.required,
+    options: field.type === 'select' ? field.options.join(', ') : '',
+    itemType: field.type === 'array' ? field.itemType : 'text',
+  };
 }
