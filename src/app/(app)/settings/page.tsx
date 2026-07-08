@@ -39,6 +39,14 @@ export default async function SettingsPage() {
               Course-Types →
             </Link>
           </li>
+          <li>
+            <Link
+              href="/settings/roles"
+              className="text-sm text-cyan-400 transition-colors hover:text-cyan-300"
+            >
+              Rollen →
+            </Link>
+          </li>
         </ul>
       </div>
     </div>

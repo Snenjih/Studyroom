@@ -1,0 +1,1 @@
+ALTER TABLE "permissions" ADD COLUMN "deprecated" boolean DEFAULT false NOT NULL;

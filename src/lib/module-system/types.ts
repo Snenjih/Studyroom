@@ -46,9 +46,12 @@ export interface CourseTypeModuleDefinition {
 
 // Permission, die ein Modul zusätzlich zu den Core-Permissions registriert
 // (Konzept Abschnitt 8, z.B. Code-Execution-Modul registriert "code:execute").
+// `moduleKey` sollte vom registrierenden Modul auf den eigenen `AppModule.key`
+// gesetzt werden — Grundlage für den DB-Abgleich in T030 (Spalte `permissions.module_key`).
 export interface PermissionDefinition {
   key: string;
   description?: string;
+  moduleKey?: string;
 }
 
 // Platzhalter für Modul-eigene Settings-Panels (Konzept Abschnitt 2). Kein Modul in
