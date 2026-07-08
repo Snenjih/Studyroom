@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run dev)",
+      "Bash(npm run build)",
+      "Bash(npm run start)",
+      "Bash(docker compose -f docker-compose.yml -f docker-compose.dev.yml up)",
+      "Bash(docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d)",
+      "Bash(docker compose -f docker-compose.yml -f docker-compose.dev.yml down)",
+      "Bash(docker compose -f docker-compose.yml -f docker-compose.dev.yml ps)",
+      "Bash(docker compose -f docker-compose.yml -f docker-compose.dev.yml logs)",
+      "Bash(docker compose -f docker-compose.yml -f docker-compose.dev.yml logs -f)",
+      "Bash(docker compose -f docker-compose.yml -f docker-compose.dev.yml restart)",
+      "Bash(docker compose -f docker-compose.dev.yml up)",
+      "Bash(docker compose -f docker-compose.dev.yml up -d)",
+      "Bash(docker compose -f docker-compose.dev.yml down)",
+      "Bash(docker compose -f docker-compose.dev.yml ps)",
+      "Bash(docker compose -f docker-compose.dev.yml logs)",
+      "Bash(docker compose -f docker-compose.dev.yml logs -f)",
+      "Bash(docker compose -f docker-compose.dev.yml restart)",
+      "Bash(curl http://localhost*)",
+      "Bash(curl http://127.0.0.1*)",
+      "Bash(curl -s http://localhost*)",
+      "Bash(curl -s http://127.0.0.1*)",
+      "Bash(curl -sf http://localhost*)",
+      "Bash(curl -sf http://127.0.0.1*)",
+      "Bash(curl -I http://localhost*)",
+      "Bash(curl -I http://127.0.0.1*)"
+    ],
+    "deny": [
+      "Bash(docker compose * down -v)",
+      "Bash(docker compose * down --volumes)",
+      "Bash(docker compose * down -v --remove-orphans)"
+    ]
+  }
+}
