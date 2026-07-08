@@ -40,7 +40,7 @@ export function QuizBlock({ content, progress, onComplete }: BlockRendererProps)
     const isCorrect = selected === correctIndex;
     startTransition(() =>
       onComplete({
-        status: 'done',
+        status: isCorrect ? 'done' : 'failed',
         score: isCorrect ? 1 : 0,
         submissionData: { selected_index: selected },
       }),

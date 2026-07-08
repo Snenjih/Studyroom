@@ -1,7 +1,7 @@
 # T020-BUGFIX: Quiz zählt falsche Antwort trotzdem als abgeschlossen
 
 **Phase:** 02-core-mvp (Bugfix zu T020)
-**Status:** offen
+**Status:** erledigt (2026-07-08)
 **Priorität:** 🔴 HÖCHSTE PRIORITÄT — vor allen anderen offenen Tasks bearbeiten
 **Abhängig von:** keine
 
@@ -42,25 +42,24 @@ falsch beantworteten Frage stand `block_progress.status = 'done'`, `score = 0`, 
 die einzige Frage falsch beantwortet wurde.
 
 ## Schritte
-- [ ] `status: isCorrect ? 'done' : 'failed'` in `QuizBlock.tsx` setzen
-- [ ] Prüfen, ob die UI für den Fall `status === 'failed'` (erneuter Versuch erlaubt? oder
-      endgültig gesperrt wie aktuell bei `submitted`?) ein bewusstes Verhalten braucht —
-      aktuell sperrt `submitted`-State die Frage nach der ersten Abgabe komplett, auch bei
-      falscher Antwort. Klären, ob das so bleiben soll oder ob `failed` einen Retry erlauben
-      muss (Konzept trifft dazu keine explizite Aussage — Rücksprache mit Nutzer, falls
-      unklar).
-- [ ] Bestehende Submission (falls vorhanden) beim Laden korrekt als `failed` erkennen
-      (`getPreviousSelection`/`submitted`-Logik prüft aktuell nur auf Vorhandensein einer
-      Selection, nicht auf Status — vermutlich unkritisch, aber gegenprüfen)
-- [ ] Regressionstest: Kurs mit Quiz-Frage anlegen, falsch beantworten, `block_progress.status`
-      und `enrollments.status` in der DB prüfen (muss `failed` / weiterhin `active` sein)
-- [ ] Gegenprobe: richtige Antwort weiterhin `done` / Kurs wird bei 100% `done` korrekt
-      `completed`
+- [x] `status: isCorrect ? 'done' : 'failed'` in `QuizBlock.tsx` setzen
+- [x] Entscheidung zum Retry-Verhalten: **kein Retry** — Frage bleibt nach der ersten Abgabe
+      gesperrt (`submitted`-State), unabhängig davon ob `done` oder `failed`. Bewusst
+      minimal gehalten, kein Scope-Creep über den reinen Status-Bug hinaus; siehe Notizen.
+- [x] Bestehende Submission beim Laden: `submitted`/`getPreviousSelection` hängt nur an
+      Vorhandensein einer `selected_index`-Selection, nicht am Status — unverändert korrekt,
+      keine Anpassung nötig.
+- [x] Regressionstest: Testkurs mit Quiz-Frage angelegt, falsch beantwortet — DB bestätigt
+      `block_progress.status = 'failed'`, `enrollments.status = 'active'`, `completed_at`
+      leer.
+- [x] Gegenprobe: zweiter Testkurs, richtig beantwortet — DB bestätigt
+      `block_progress.status = 'done'`, `enrollments.status = 'completed'`, `completed_at`
+      gesetzt.
 
 ## Abnahmekriterien
-- [ ] Falsche Quiz-Antwort → `block_progress.status = 'failed'`
-- [ ] Kurs mit falsch beantworteter Pflichtfrage wird NICHT als `completed` markiert
-- [ ] Richtige Quiz-Antwort weiterhin `done`, Kurs-Completion-Logik unverändert korrekt
+- [x] Falsche Quiz-Antwort → `block_progress.status = 'failed'`
+- [x] Kurs mit falsch beantworteter Pflichtfrage wird NICHT als `completed` markiert
+- [x] Richtige Quiz-Antwort weiterhin `done`, Kurs-Completion-Logik unverändert korrekt
 
 ## Betroffene Dateien
 - `src/modules/course-types/quiz/QuizBlock.tsx`
@@ -68,5 +67,13 @@ die einzige Frage falsch beantwortet wurde.
 ## Notizen
 Gefunden während interaktivem Playwright-MCP-Test (Login → Program "Mathe" → Course
 "Trigonometrie-Quiz" → falsche Antwort "180°" bei Frage "Wie viel Grad hat ein rechter
-Winkel?"). Testdaten (Program "Mathe", diverse Test-Courses) liegen aktuell noch in der
-lokalen Dev-DB, nicht Teil dieser Task.
+Winkel?").
+
+Fix: Ein-Zeilen-Änderung in `handleSubmit()` — `status` hängt jetzt von `isCorrect` ab statt
+hart auf `'done'` zu stehen. `npx tsc --noEmit` und `npx eslint` sauber.
+
+Live gegen echte Postgres-Instanz verifiziert (zwei frische Testkurse, je eine Quiz-Frage):
+falsch beantwortet → `failed`/`active`/kein `completed_at`; richtig beantwortet →
+`done`/`completed`/`completed_at` gesetzt. Alle Testdaten (Program "Mathe" inkl. aller
+Test-Courses) anschließend aus der lokalen Dev-DB gelöscht (Cascade-Delete über
+`programs.id`).

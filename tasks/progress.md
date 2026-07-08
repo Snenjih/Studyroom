@@ -1,12 +1,10 @@
 # Projekt-Fortschritt
 
-👉 **Nächste Task:** 🔴 T020-BUGFIX — Quiz zählt falsche Antwort trotzdem als abgeschlossen
-(siehe unten, vor T024 zu bearbeiten)
+👉 **Nächste Task:** T024 — Modul-Registry Grundstruktur (AppConfig-Pattern)
 
-## 🔴 Wichtigster offener Punkt (Bugfix, höchste Priorität)
-- [ ] T020-BUGFIX — Quiz zählt falsche Antwort trotzdem als `done`/abgeschlossen
-  (`tasks/02-core-mvp/T020-BUGFIX-quiz-falsche-antwort-status.md`) — beim End-to-End-Test
-  mit Playwright-MCP gefunden
+## Bugfixes (außerhalb der Roadmap-Nummerierung)
+- [x] T020-BUGFIX — Quiz zählt falsche Antwort trotzdem als `done`/abgeschlossen, erledigt
+  (2026-07-08) (`tasks/02-core-mvp/T020-BUGFIX-quiz-falsche-antwort-status.md`)
 
 ## Phase 00 — Bootstrap
 - [x] T000 — Vollständigen Task-Breakdown generieren (`tasks/00-bootstrap/`)
