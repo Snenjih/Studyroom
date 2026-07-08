@@ -13,8 +13,11 @@ const DEFAULT_ENABLED_MODULE_KEYS = AVAILABLE_MODULES.map((module) => module.key
 // Welche Module beim App-Start tatsächlich registriert werden, bestimmt die
 // `ENABLED_MODULES`-Umgebungsvariable (kommagetrennte Keys) — fehlt sie, sind alle
 // bekannten Module aktiv. Bewusst rein synchron/env-basiert (keine DB-Abfrage): diese
-// Datei wird über `app-config.ts` auch von Client-Komponenten importiert (siehe
-// `BlockRow.tsx`), ein DB-Zugriff hier würde `server-only`-Code ins Client-Bundle ziehen.
+// Datei wird von `src/lib/rbac.ts` importiert, um Permissions inaktiver Module bei
+// jedem Berechtigungs-Check live auszufiltern (nicht nur beim seltener laufenden
+// DB-Abgleich in `lib/db/permissions.ts`) — ein DB-Zugriff hier würde diesen
+// Hot-Path unnötig verlangsamen. `app-config.ts` (server-only) nutzt dieselbe
+// Funktion, um zu entscheiden, welche Module in der ModuleRegistry landen.
 // `env` als Parameter (statt direkt `process.env` zu lesen) macht die Funktion ohne
 // Env-Mutation testbar.
 export function parseEnabledModuleKeys(env: string | undefined = process.env.ENABLED_MODULES): string[] {

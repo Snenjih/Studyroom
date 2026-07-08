@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { and, asc, eq, max } from 'drizzle-orm';
+import { and, asc, eq, isNull, max, or } from 'drizzle-orm';
 
 import { db } from '@/db';
 import { type BlockContent, contentBlocks, courses, courseTypes, programs } from '@/db/schema';
@@ -61,11 +61,21 @@ export async function listCourseTypes() {
   return db.select().from(courseTypes).orderBy(asc(courseTypes.name));
 }
 
-export async function courseTypeExists(courseTypeId: string) {
+// Org-gescoped wie jede andere Query hier: ein Course-Type ist nur zuweisbar, wenn er
+// ein System-Typ (`org_id = NULL`) oder ein Custom-Typ der EIGENEN Org ist — sonst
+// könnte ein Kurs versehentlich (oder absichtlich per manipulierter Request) auf den
+// Custom-Type einer fremden Org verweisen, sobald Multi-Tenancy (Konzept Abschnitt 5)
+// aktiviert wird.
+export async function courseTypeExists(courseTypeId: string, orgId: string) {
   const [courseType] = await db
     .select({ id: courseTypes.id })
     .from(courseTypes)
-    .where(eq(courseTypes.id, courseTypeId))
+    .where(
+      and(
+        eq(courseTypes.id, courseTypeId),
+        or(isNull(courseTypes.orgId), eq(courseTypes.orgId, orgId)),
+      ),
+    )
     .limit(1);
   return Boolean(courseType);
 }
@@ -89,7 +99,7 @@ export async function createCourse(
   if (!(await programBelongsToOrg(programId, orgId))) {
     return { error: 'program_not_found' };
   }
-  if (!(await courseTypeExists(input.courseTypeId))) {
+  if (!(await courseTypeExists(input.courseTypeId, orgId))) {
     return { error: 'course_type_not_found' };
   }
 
@@ -133,7 +143,7 @@ export async function updateCourse(id: string, orgId: string, input: UpdateCours
   if (!(await courseBelongsToOrg(id, orgId))) {
     return { error: 'course_not_found' as const };
   }
-  if (input.courseTypeId && !(await courseTypeExists(input.courseTypeId))) {
+  if (input.courseTypeId && !(await courseTypeExists(input.courseTypeId, orgId))) {
     return { error: 'course_type_not_found' as const };
   }
 
