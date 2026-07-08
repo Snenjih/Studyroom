@@ -1,24 +1,16 @@
 import { relations } from 'drizzle-orm';
 import { integer, jsonb, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
+import type { SchemaDefinition } from '@/lib/schema-definition/types';
+
 import { courses } from './courses';
 import { organizations } from './organizations';
 
 // Beschreibt, welche Block-Typen ein Course-Type erlaubt und welche Felder sie haben
 // (Konzept Abschnitt 4). Wird beim Speichern gegen `content_blocks.content` geprüft
-// (App-Schicht) — generische Validierung/Type-Editor folgt erst in Phase 3 (T026ff).
-export interface CourseTypeFieldDefinition {
-  name: string;
-  type: 'string' | 'number' | 'array';
-  required: boolean;
-}
-
-export interface CourseTypeSchemaDefinition {
-  allowedBlockTypes: {
-    type: string;
-    fields: CourseTypeFieldDefinition[];
-  }[];
-}
+// (App-Schicht). Formales Format seit T026 in `lib/schema-definition/types.ts` — dieser
+// Alias bleibt der DB-seitige Name, damit bestehende Importe (`db/schema`) stabil bleiben.
+export type CourseTypeSchemaDefinition = SchemaDefinition;
 
 // org_id = NULL bedeutet System-Default-Typ, org-weit verfügbar (Konzept Abschnitt 4).
 export const courseTypes = pgTable('course_types', {

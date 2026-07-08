@@ -1,4 +1,3 @@
-import type { CourseTypeSchemaDefinition } from '@/db/schema/course-types';
 import { BASE_COURSE_TYPES } from '@/db/seed-data/course-types';
 import type { AppModule } from '@/lib/module-system';
 
@@ -20,7 +19,7 @@ export const flashcardsModule: AppModule = {
           key: definition.key,
           name: definition.name,
           executionEngine: definition.executionEngine,
-          schemaDefinition: definition.schemaDefinition as unknown as CourseTypeSchemaDefinition,
+          schemaDefinition: definition.schemaDefinition,
           renderer: FlashcardBlock,
           editor: FlashcardEditor,
         },

@@ -1,8 +1,17 @@
+import type { SchemaDefinition } from '@/lib/schema-definition/types';
+
 // Hartcodierte Basis-Course-Types (Konzept Abschnitt 10, Phase 1 bewusst ohne
 // generisches Schema-System). org_id = NULL => system-weit verfügbar.
-// `schema_definition` beschreibt, welche Block-Typen mit welchen Feldern erlaubt
-// sind — Validierung dagegen passiert in der App-Schicht (Konzept Abschnitt 4).
-export const BASE_COURSE_TYPES = [
+// `schemaDefinition` nutzt seit T026 das formale Format aus `lib/schema-definition/types.ts`
+// — Validierung dagegen passiert in der App-Schicht (Konzept Abschnitt 4, `validateBlock()`).
+interface BaseCourseType {
+  key: string;
+  name: string;
+  executionEngine: string;
+  schemaDefinition: SchemaDefinition;
+}
+
+export const BASE_COURSE_TYPES: BaseCourseType[] = [
   {
     key: 'markdown-info',
     name: 'Markdown-Info',
@@ -11,7 +20,7 @@ export const BASE_COURSE_TYPES = [
       allowedBlockTypes: [
         {
           type: 'markdown',
-          fields: [{ name: 'content', type: 'string', required: true }],
+          fields: [{ name: 'content', type: 'markdown', required: true }],
         },
       ],
     },
@@ -25,8 +34,8 @@ export const BASE_COURSE_TYPES = [
         {
           type: 'flashcard',
           fields: [
-            { name: 'front', type: 'string', required: true },
-            { name: 'back', type: 'string', required: true },
+            { name: 'front', type: 'text', required: true },
+            { name: 'back', type: 'text', required: true },
           ],
         },
       ],
@@ -41,12 +50,12 @@ export const BASE_COURSE_TYPES = [
         {
           type: 'quiz-question',
           fields: [
-            { name: 'question', type: 'string', required: true },
-            { name: 'options', type: 'array', required: true },
-            { name: 'correct_index', type: 'number', required: true },
+            { name: 'question', type: 'text', required: true },
+            { name: 'options', type: 'array', itemType: 'text', required: true, minItems: 2 },
+            { name: 'correct_index', type: 'number', required: true, min: 0 },
           ],
         },
       ],
     },
   },
-] as const;
+];

@@ -4,7 +4,6 @@ import { PERMISSIONS } from '@/lib/permissions';
 import { hashPassword } from '@/lib/password';
 
 import { db } from './index';
-import type { CourseTypeSchemaDefinition } from './schema';
 import {
   courseTypes,
   organizations,
@@ -76,14 +75,14 @@ async function seed() {
         orgId: null,
         key: courseType.key,
         name: courseType.name,
-        schemaDefinition: courseType.schemaDefinition as unknown as CourseTypeSchemaDefinition,
+        schemaDefinition: courseType.schemaDefinition,
         executionEngine: courseType.executionEngine,
       })
       .onConflictDoUpdate({
         target: courseTypes.key,
         set: {
           name: courseType.name,
-          schemaDefinition: courseType.schemaDefinition as unknown as CourseTypeSchemaDefinition,
+          schemaDefinition: courseType.schemaDefinition,
           executionEngine: courseType.executionEngine,
         },
       });

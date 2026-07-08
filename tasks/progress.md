@@ -1,6 +1,6 @@
 # Projekt-Fortschritt
 
-👉 **Nächste Task:** T026 — Generisches schema_definition-System für Course-Types
+👉 **Nächste Task:** T027 — Schema-Validierungsschicht für content_blocks
 
 ## Bugfixes (außerhalb der Roadmap-Nummerierung)
 - [x] T020-BUGFIX — Quiz zählt falsche Antwort trotzdem als `done`/abgeschlossen, erledigt
@@ -39,7 +39,7 @@
 ## Phase 03 — Modul-System & Type-Engine (9 Tasks)
 - [x] T024 — Modul-Registry Grundstruktur (AppConfig-Pattern)
 - [x] T025 — Bestehende Course-Types als Module umbauen
-- [ ] T026 — Generisches schema_definition-System für Course-Types
+- [x] T026 — Generisches schema_definition-System für Course-Types
 - [ ] T027 — Schema-Validierungsschicht für content_blocks
 - [ ] T028 — Type-Editor UI — Felder-Builder-Komponente
 - [ ] T029 — Type-Editor UI — Vorschau-Renderer für Custom-Types
